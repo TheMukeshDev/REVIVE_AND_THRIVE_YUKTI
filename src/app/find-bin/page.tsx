@@ -66,7 +66,7 @@ export default function FindBinPage() {
             setLoadingBins(true)
             const res = await fetch(`/api/bins?city=${encodeURIComponent(searchCity)}`)
             const data = await res.json()
-            
+
             if (data.supported === false) {
                 setIsCitySupported(false)
                 setCity(searchCity)
@@ -97,7 +97,7 @@ export default function FindBinPage() {
                 return
             }
         }
-        
+
         // Default to Prayagraj
         fetchBinsForCity("Prayagraj")
     }, [loc.latitude, loc.longitude, loc.usingDefault, fetchBinsForCity])
@@ -296,15 +296,22 @@ export default function FindBinPage() {
                         {/* Active Drop Flow Banner */}
                         {isDropFlow && (
                             <div className="p-3 bg-primary/10 border border-primary/20 rounded-xl flex items-center gap-3 animate-in slide-in-from-top-2">
-                                <div className="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold text-lg">2</div>
+                                <div className="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold text-lg">
+                                    {(typeof window !== 'undefined' && sessionStorage.getItem("ai_confidence")
+                                        ? Math.round(parseFloat(sessionStorage.getItem("ai_confidence")!) * 100)
+                                        : "?")}
+                                    <span className="text-[10px]">%</span>
+                                </div>
                                 <div>
-                                    <h3 className="font-bold text-sm text-primary-900 dark:text-primary-100">Find a Nearest Bin</h3>
+                                    <h3 className="font-bold text-sm text-primary-900 dark:text-primary-100">
+                                        Found similar bins for: <span className="capitalize">{typeof window !== 'undefined' ? sessionStorage.getItem("scanned_item_type") || "Item" : "Item"}</span>
+                                    </h3>
                                     <p className="text-xs text-muted-foreground">Navigate to a bin to complete your drop.</p>
                                 </div>
                             </div>
                         )}
 
-{/* Search Bar */}
+                        {/* Search Bar */}
                         <div className="relative">
                             <input
                                 type="text"
@@ -328,7 +335,7 @@ export default function FindBinPage() {
                             </button>
                         </div>
 
-{/* Filter Chips */}
+                        {/* Filter Chips */}
                         <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2">
                             <button
                                 onClick={() => setFilter("all")}
@@ -349,13 +356,12 @@ export default function FindBinPage() {
                                             toast.info("Available once EcoDrop launches in this city")
                                         }
                                     }}
-                                    className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors border ${
-                                        !isCitySupported
+                                    className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors border ${!isCitySupported
                                             ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
                                             : filter === f.id
                                                 ? "bg-primary text-primary-foreground border-primary"
                                                 : "bg-background border-border text-muted-foreground hover:bg-secondary"
-                                    }`}
+                                        }`}
                                     title={!isCitySupported ? "Available once EcoDrop launches in this city" : undefined}
                                 >
                                     {f.label}

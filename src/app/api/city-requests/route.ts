@@ -15,9 +15,9 @@ export async function POST(request: NextRequest) {
 
         await dbConnect()
 
-        const ip = request.headers.get('x-forwarded-for') || 
-                   request.headers.get('x-real-ip') || 
-                   'unknown'
+        const ip = request.headers.get('x-forwarded-for') ||
+            request.headers.get('x-real-ip') ||
+            'unknown'
         const userAgent = request.headers.get('user-agent') || 'unknown'
 
         const cityRequest = await CityRequest.create({

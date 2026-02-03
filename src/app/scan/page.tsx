@@ -53,7 +53,7 @@ export default function ScanPage() {
         }
     }
 
-    const captureProduct = () => {
+    const captureProduct = async () => {
         if (!videoRef.current) return
 
         const canvas = document.createElement("canvas")
@@ -64,12 +64,40 @@ export default function ScanPage() {
             ctx.drawImage(videoRef.current, 0, 0)
             const imageData = canvas.toDataURL("image/jpeg")
 
-            // Store image and redirect
-            sessionStorage.setItem("pending_drop_image", imageData)
-            sessionStorage.setItem("drop_flow_active", "true")
+            // Show analyzing state
+            setIsLoading(true)
 
-            toast.success("Product captured! Now find a bin.", { duration: 3000 })
-            router.push("/find-bin?dropFlow=true")
+            try {
+                // Call AI detection API
+                const res = await fetch("/api/scan/analyze", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ image: imageData })
+                })
+
+                const data = await res.json()
+
+                if (data.success) {
+                    // Store detailed AI results
+                    sessionStorage.setItem("pending_drop_image", imageData)
+                    sessionStorage.setItem("drop_flow_active", "true")
+                    sessionStorage.setItem("scanned_item_type", data.result.type)
+                    sessionStorage.setItem("scanned_category", data.result.category)
+                    sessionStorage.setItem("ai_confidence", data.result.confidence.toString())
+
+                    toast.success(`Identified: ${data.result.type} (${(data.result.confidence * 100).toFixed(0)}% confidence)`)
+
+                    // Redirect to map with filter pre-selected
+                    router.push(`/find-bin?dropFlow=true&filter=${data.result.category === 'e-waste' ? 'all' : 'all'}&item=${encodeURIComponent(data.result.type)}`)
+                } else {
+                    toast.error("Could not identify item. Please try again.")
+                }
+            } catch (error) {
+                console.error("Scan error:", error)
+                toast.error("Failed to analyze image")
+            } finally {
+                setIsLoading(false)
+            }
         }
     }
 

@@ -1,167 +1,157 @@
 # EcoDrop – Smart E-Waste Recycling Platform
 
-> **Drop e-waste. Earn impact.**
+> Making e-waste recycling actually convenient.
+
+## What's This About?
+
+We built EcoDrop because recycling e-waste is way harder than it should be. Most people want to recycle their old phones and batteries, but they don't know where to go, and honestly, it's just not worth the hassle. So we made an app that fixes that.
+
+## The Problem We're Solving
+
+E-waste is growing faster than any other type of waste, but less than 20% of it gets recycled. Why? Three main reasons:
+
+1. **Nobody knows where the bins are** – You can't recycle if you can't find a bin
+2. **Trust issues** – How do you know your stuff actually gets recycled?
+3. **Zero motivation** – Why go out of your way when there's no benefit?
+
+## Our Solution
+
+EcoDrop is basically Google Maps for recycling bins, with some gamification thrown in. We started in Prayagraj (our hometown) and built it to work in other cities too.
+
+### What It Does
+
+- **Find bins near you** – Real-time map showing which bins are operational, full, or under maintenance
+- **AI verification** – Scan your item, get instant confirmation it's recyclable
+- **Earn rewards** – Get points for every drop, redeem them for eco-friendly stuff
+- **Track your impact** – See how much CO₂ you've saved
+- **Multi-city support** – Works in Prayagraj now, expanding soon
+
+## How It Works
+
+1. Pick what you want to recycle
+2. App shows you the nearest bin
+3. Navigate there (we integrate with Google Maps)
+4. Scan your item at the bin
+5. Drop it in when verified
+6. Earn points and see your impact
+
+Pretty straightforward.
+
+## Tech Stack
+
+We kept it simple but modern:
+
+- **Frontend**: Next.js 14 (App Router) with TypeScript
+- **Styling**: Tailwind CSS + Framer Motion for animations
+- **Backend**: Next.js API routes
+- **Database**: MongoDB (using Mongoose)
+- **Maps**: Google Maps Platform
+- **AI**: Custom verification logic (ready for ML integration)
+
+The whole thing runs serverless, so it scales easily.
+
+## Database Structure
+
+We're using MongoDB with these main collections:
+
+- **Users** – Profiles, points, stats
+- **Bins** – Locations, status, fill levels
+- **Transactions** – Every recycling event (immutable log)
+- **Rewards** – Stuff you can redeem
+- **DetectionLogs** – AI scan history for training
+
+## Getting Started
+
+### You'll Need
+
+- Node.js 18 or higher
+- MongoDB (local or Atlas)
+- Google Maps API key
+
+### Setup
+
+```bash
+# Clone it
+git clone https://github.com/TheMukeshDev/EcoDrop.git
+cd EcoDrop
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+# Create .env.local with:
+# MONGODB_URI=your_mongodb_connection_string
+# NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_key
+
+# Seed the database with demo data
+npx tsx scripts/seed.ts
+
+# Run it
+npm run dev
+```
+
+Open http://localhost:3000 and you're good to go.
+
+## Features We're Proud Of
+
+### Location Stuff
+- Uses your GPS to find the closest bin
+- Falls back gracefully if you deny location access
+- Haversine formula for accurate distance calculations
+- Auto-routes to nearest bin on page load
+
+### Verification System
+- Confidence scores for every scan
+- High confidence (>85%) = instant approval
+- Low confidence = manual review or user selection
+- Full transparency on what was detected and why
+
+### UX Details
+- Dark mode (with a toggle in the header now)
+- Mobile-first design
+- Smooth animations that don't feel janky
+- Bottom nav like Instagram/Uber – familiar and easy
+
+### Performance
+- Throttled location updates (no battery drain)
+- Optimized map rendering
+- Lazy loading where it makes sense
+
+## Multi-City Support
+
+We built this for Prayagraj first, but it's designed to work anywhere. The app detects your city and shows available bins. If your city isn't supported yet, you get a "Coming Soon" screen where you can request it.
+
+Currently supported:
+- Prayagraj (Allahabad)
+
+Coming soon:
+- Your city? Let us know!
+
+## What's Next
+
+Some things we want to add:
+
+- **Predictive analytics** – Predict when bins will be full
+- **Real IoT integration** – Actually connect to physical smart bins
+- **More cities** – Expand beyond Prayagraj
+- **Better AI** – Train actual ML models on real data
+- **Social features** – Leaderboards, challenges, etc.
+
+## Built For Haxplore
+
+This was our submission for the Haxplore hackathon. We focused on making something that actually works and feels good to use, not just a tech demo.
+
+**Team Binary Bloom:**
+- Mukesh Kumar – Built most of it, led the team
+- Deepa Tiwari – Presented to judges
+- Ankit Kumar – Frontend work
+
+## License
+
+MIT – do whatever you want with it.
 
 ---
 
-## 1. Project Overview
+Built with ❤️ (and way too much coffee) in Prayagraj.
 
-**The Problem**
-E-waste is the fastest-growing waste stream globally, yet recycling rates remain critically low (less than 20%). Validated barriers to participation include:
-1.  **Inconvenience**: Users don't know where to find recycling bins.
-2.  **Lack of Trust**: Users are unsure if deposited items are actually recycled.
-3.  **No Incentive**: There is no immediate tangible reward for the effort.
-
-**The Solution**
-EcoDrop is a "UI/UX-First" Smart E-Waste Bin System designed to bridge the gap between intent and action. By leveraging geolocation, transparent tracking, and gamification, EcoDrop makes recycling:
-*   **Easy to Find**: Real-time map navigation to the nearest operational bin.
-*   **Transparent**: AI-verified item detection and impact tracking.
-*   **Rewarding**: Instant points redeemable for eco-friendly products.
-
-*This prototype is localized for **Prayagraj (Allahabad)**, demonstrating deployment readiness in key areas like Teliyarganj, Civil Lines, and Jhusi.*
-
----
-
-## 2. Key Features
-
-*   **Location-Based Bin Finder**: Integrated Google Maps to locate nearest smart bins with real-time status (Operational, Full, or Maintenance).
-*   **AI-Powered Waste Detection**: Explainable AI system that identifies e-waste types (e.g., smartphone, battery, laptop) with confidence scores.
-*   **Smart Bin Interaction**: Simulated IoT handshake for secure bin opening and depositing.
-*   **Rewards & Gamification**: Points system with a "Marketplace" for redeeming rewards, driving sustained user engagement.
-*   **Environmental Impact Wallet**: Visual stats tracking CO₂ saved and total items recycled.
-*   **Admin Dashboard**: Centralized view for municipal authorities to monitor bin fill levels and collection routes.
-
----
-
-## 3. User Flow
-
-1.  **Select Item**: User identifies the e-waste they wish to recycle.
-2.  **Find Bin**: App locates the nearest *operational* bin using Geolocation and Google Maps.
-3.  **Navigate**: "Get Directions" feature guides the user to the bin location.
-4.  **Scan**: User scans the item at the bin. AI verifies the object type and condition.
-5.  **Deposit**: Upon high-confidence valid verification, the bin converts to "Receiving Mode".
-6.  **Earn**: User receives points (`EcoCoins`) and sees their updated carbon offset stats.
-
----
-
-## 4. System Architecture
-
-EcoDrop follows a modern, scalable **Serverless Architecture** to ensure high availability and low maintenance overhead.
-
-*   **Frontend**: Next.js (App Router) for hybrid static/server rendering, ensuring incredibly fast load times and SEO optimization.
-*   **Styling & UI**: Tailwind CSS for a utility-first design system, coupled with **Framer Motion** for high-fidelity micro-interactions (60fps animations).
-*   **Backend**: Next.js API Routes (Node.js) serving as the REST API layer.
-*   **Database**: MongoDB (Atlas) with Mongoose ODM for flexible schema modeling of heterogeneous e-waste data.
-*   **Services**:
-    *   **Google Maps Platform**: For Geocoding, Maps JavaScript API, and Directions.
-    *   **AI Simulation**: Logic-based verification layer (adaptable to TensorFlow.js/Custom Vision integration).
-
-This architecture allows independent scaling of frontend and backend logic, ready for "City-Scale" deployment.
-
----
-
-## 5. Database Design
-
-The data layer is built on **MongoDB** to handle unstructured log data and relationship-heavy user functionality.
-
-*   **`Users`**: Stores profile, authenticated sessions, total points, and aggregated impact stats (CO₂ saved).
-*   **`Bins`**: Geo-spatial data (Lat/Lng), current fill level (0-100%), status (Operational/Full), and accepted item types.
-*   **`Transactions`**: Immutable ledger of every recycling event, linking `User`, `Bin`, and `Item` with timestamps.
-*   **`Rewards`**: Catalog of redeemable items and their point costs.
-*   **`DetectionLogs`**: Audit trail of AI scans, including confidence scores and raw inputs for system training.
-
----
-
-## 6. Location & Maps Integration
-
-EcoDrop utilizes the **Google Maps JavaScript API** for a premium mapping experience.
-
-*   **Smart Geolocation**: The app attempts to acquire the user's high-accuracy GPS position.
-*   **Fallbacks**: If permission is denied or GPS is unavailable, the system gracefully degrades to a default "City Center" view (Teliyarganj, Prayagraj).
-*   **Distance Logic**: Uses the **Haversine Formula** on the client-side to calculate precise distance from the user to each bin, sorting results by proximity.
-
----
-
-## 7. AI Transparency
-
-Trust is paramount. Unlike "Black Box" systems, EcoDrop prioritizes **Explainable AI**.
-
-*   **Confidence Scores**: Every scan returns a % confidence. Scores (>85%) auto-unlock the bin.
-*   **Human-in-the-Loop**: "Low Confidence" scans (e.g., damaged items) trigger a manual review flag or prompt the user for manual category selection, ensuring no valid recycling attempt is rejected erroneously.
-*   **Feedback**: Users see exactly *what* the system detected and *why* it was accepted or flagged.
-
----
-
-## 8. Setup Instructions
-
-### Prerequisites
-*   Node.js (v18+)
-*   npm or yarn
-*   MongoDB Instance (Local or Atlas)
-*   Google Maps API Key
-
-### Installation
-
-1.  **Clone the repository**
-    ```bash
-    git clone https://github.com/TheMukeshDev/EcoDrop.git
-    cd EcoDrop
-    ```
-
-2.  **Install Dependencies**
-    ```bash
-    npm install
-    ```
-
-3.  **Configure Environment Variables**
-    Create a `.env.local` file in the root directory:
-    ```env
-    MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/ecodrop
-    
-    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaSy...
-    ```
-
-4.  **Seed the Database**
-    Populate the database with demo users, smart bins (Prayagraj locations), and rewards.
-    ```bash
-    npx tsx scripts/seed.ts
-    ```
-
-5.  **Run Development Server**
-    ```bash
-    npm run dev
-    ```
-    Open [http://localhost:3000](http://localhost:3000) in your browser.
-
----
-
-## 9. Hackathon Alignment
-
-**Theme: Smart City / Sustainability**
-
-*   **User Experience (UX)**: We prioritized a "no-learning-curve" interface. The floating action button (`Scan`) and bottom navigation mirror familiar apps like Instagram/Uber, reducing cognitive load.
-*   **Accessibility**: High-contrast dark mode, large touch targets (44px+), and screen-reader-friendly semantic HTML.
-*   **Scalability**: The system is designed to handle thousands of bins. The "Find Bin" logic performs geospatial queries that scale efficiently with database indexing.
-
----
-
-## 10. Future Improvements
-
-*   **Predictive Analytics**: Using Machine Learning to predict "Bin Full" events before they happen based on usage history.
-*   **IoT Integration**: replacing simulated handshake with actual MQTT/Bluetooth Low Energy (BLE) communication with physical bin locks.
-*   **Regional Expansion**: Dynamic localization support for other smart cities.
-
----
-
-## 11. Team & Credits
-
-**Team Name**: Binary Bloom  
-*Haxplore Hackathon Submission*
-
-*   **Mukesh Kumar** – Team Leader
-*   **Deepa Tiwari** – Presenter
-*   **Ankit Kumar** – Frontend Developer
-
----
-
-*Built with ❤️ for a cleaner planet.*
+Questions? Hit us up or open an issue.
