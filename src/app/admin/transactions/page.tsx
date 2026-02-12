@@ -98,15 +98,15 @@ export default function TransactionsPage() {
     }
 
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-4 sm:space-y-6 md:space-y-8 w-full">
+            <div className="flex flex-col sm:flex-row sm:items-start md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold">Transaction History</h1>
-                    <p className="text-muted-foreground">View and manage recycling activities.</p>
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">Transaction History</h1>
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-1 sm:mt-2">View and manage recycling activities.</p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
                     <Select value={statusFilter} onValueChange={setStatusFilter}>
-                        <SelectTrigger className="w-[140px]">
+                        <SelectTrigger className="w-full sm:w-35 h-10 text-xs sm:text-sm">
                             <Filter className="w-4 h-4 mr-2" />
                             <SelectValue placeholder="Status" />
                         </SelectTrigger>
@@ -119,7 +119,7 @@ export default function TransactionsPage() {
                     </Select>
 
                     <Select value={typeFilter} onValueChange={setTypeFilter}>
-                        <SelectTrigger className="w-[140px]">
+                        <SelectTrigger className="w-full sm:w-35 h-10 text-xs sm:text-sm">
                             <Filter className="w-4 h-4 mr-2" />
                             <SelectValue placeholder="Type" />
                         </SelectTrigger>
@@ -132,10 +132,10 @@ export default function TransactionsPage() {
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="bg-card border border-border rounded-lg sm:rounded-xl overflow-hidden shadow-sm w-full">
                 <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left">
-                        <thead className="text-xs text-gray-500 uppercase bg-gray-50 border-b">
+                    <table className="w-full text-xs sm:text-sm text-left">
+                        <thead className="text-xs uppercase bg-secondary/50 border-b border-border/50 text-muted-foreground">
                             <tr>
                                 <th className="px-6 py-3">Date</th>
                                 <th className="px-6 py-3">User</th>

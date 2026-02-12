@@ -13,8 +13,11 @@ export default function AdminLogsPage() {
     }, [])
 
     return (
-        <div className="space-y-6">
-            <h1 className="text-3xl font-bold">Audit Logs</h1>
+        <div className="space-y-4 sm:space-y-6 md:space-y-8 w-full">
+            <div>
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">Audit Logs</h1>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1 sm:mt-2">Track all system activities and changes</p>
+            </div>
             <Card>
                 <CardHeader><CardTitle>System Activities</CardTitle></CardHeader>
                 <CardContent>

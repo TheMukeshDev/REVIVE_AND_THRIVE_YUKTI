@@ -71,83 +71,81 @@ export default function DropsManagementPage() {
     }
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold tracking-tight">Drop Verification</h1>
+        <div className="space-y-4 sm:space-y-6 md:space-y-8 w-full">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">Drop Verification</h1>
                 <Button onClick={fetchDrops} variant="outline" size="sm">
                     Refresh
                 </Button>
             </div>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Recent Drop Activities</CardTitle>
+            <Card className="w-full">
+                <CardHeader className="pb-3 sm:pb-4 md:pb-6">
+                    <CardTitle className="text-base sm:text-lg md:text-xl">Recent Drop Activities</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-0 sm:p-6">
                     {loading ? (
                         <div className="flex justify-center p-8"><Loader2 className="animate-spin" /></div>
                     ) : (
                         <div className="overflow-x-auto">
-                            <table className="w-full text-sm text-left">
-                                <thead className="text-xs uppercase bg-secondary/50 text-muted-foreground">
+                            <table className="w-full text-xs sm:text-sm text-left">
+                                <thead className="text-xs uppercase bg-secondary/50 text-muted-foreground border-b border-border/50">
                                     <tr>
-                                        <th className="px-4 py-3">User</th>
-                                        <th className="px-4 py-3">Item</th>
-                                        <th className="px-4 py-3">Bin Location</th>
-                                        <th className="px-4 py-3">Points</th>
-                                        <th className="px-4 py-3">Status</th>
-                                        <th className="px-4 py-3">Date</th>
-                                        <th className="px-4 py-3 text-right">Actions</th>
+                                        <th className="px-2 sm:px-4 py-2 sm:py-3 font-semibold">User</th>
+                                        <th className="px-2 sm:px-4 py-2 sm:py-3 font-semibold hidden sm:table-cell">Item</th>
+                                        <th className="px-2 sm:px-4 py-2 sm:py-3 font-semibold hidden lg:table-cell">Bin</th>
+                                        <th className="px-2 sm:px-4 py-2 sm:py-3 font-semibold">Points</th>
+                                        <th className="px-2 sm:px-4 py-2 sm:py-3 font-semibold">Status</th>
+                                        <th className="px-2 sm:px-4 py-2 sm:py-3 font-semibold text-right">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {drops.map((drop) => (
-                                        <tr key={drop._id} className="border-b border-border hover:bg-muted/50 transition-colors">
-                                            <td className="px-4 py-3 font-medium">
-                                                {drop.userId?.name || "Unknown"}
-                                                <div className="text-xs text-muted-foreground">{drop.userId?.email}</div>
+                                        <tr key={drop._id} className="border-b border-border/30 hover:bg-secondary/30 transition-colors">
+                                            <td className="px-2 sm:px-4 py-2 sm:py-3 font-medium">
+                                                <div className="text-xs sm:text-sm">{drop.userId?.name || "Unknown"}</div>
+                                                <div className="text-xs text-muted-foreground hidden sm:block truncate">{drop.userId?.email}</div>
                                             </td>
-                                            <td className="px-4 py-3 capitalize">{drop.itemName} ({drop.itemType})</td>
-                                            <td className="px-4 py-3">{drop.binId?.name || "N/A"}</td>
-                                            <td className="px-4 py-3 font-bold">+{drop.pointsEarned}</td>
-                                            <td className="px-4 py-3">
+                                            <td className="px-2 sm:px-4 py-2 sm:py-3 capitalize hidden sm:table-cell text-xs sm:text-sm">{drop.itemName}</td>
+                                            <td className="px-2 sm:px-4 py-2 sm:py-3 hidden lg:table-cell text-xs sm:text-sm">{drop.binId?.name || "N/A"}</td>
+                                            <td className="px-2 sm:px-4 py-2 sm:py-3 font-bold text-xs sm:text-sm">+{drop.pointsEarned}</td>
+                                            <td className="px-2 sm:px-4 py-2 sm:py-3">
                                                 <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(drop.status)}`}>
-                                                    {drop.status}
+                                                    {drop.status.charAt(0).toUpperCase() + drop.status.slice(1)}
                                                 </span>
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-muted-foreground">
-                                                {new Date(drop.createdAt).toLocaleString()}
-                                            </td>
-                                            <td className="px-4 py-3 text-right space-x-2">
+                                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-right">
                                                 {drop.status === "pending" && (
-                                                    <>
+                                                    <div className="flex gap-1 sm:gap-2 justify-end">
                                                         <Button
                                                             size="sm"
-                                                            className="h-8 w-8 p-0 bg-green-600 hover:bg-green-700"
+                                                            className="h-7 sm:h-8 w-7 sm:w-8 p-0 bg-green-600 hover:bg-green-700"
                                                             onClick={() => handleStatusUpdate(drop._id, "approved")}
                                                             disabled={!!processingId}
+                                                            title="Approve"
                                                         >
-                                                            <Check className="w-4 h-4" />
+                                                            <Check className="w-3 sm:w-4 h-3 sm:h-4" />
                                                         </Button>
                                                         <Button
                                                             size="sm"
                                                             variant="destructive"
-                                                            className="h-8 w-8 p-0"
+                                                            className="h-7 sm:h-8 w-7 sm:w-8 p-0"
                                                             onClick={() => handleStatusUpdate(drop._id, "rejected")}
                                                             disabled={!!processingId}
+                                                            title="Reject"
                                                         >
-                                                            <X className="w-4 h-4" />
+                                                            <X className="w-3 sm:w-4 h-3 sm:h-4" />
                                                         </Button>
-                                                    </>
+                                                    </div>
                                                 )}
                                                 {drop.status === "approved" && (
                                                     <Button
                                                         size="sm"
                                                         variant="ghost"
-                                                        className="h-8 text-red-500 hover:text-red-600 hover:bg-red-50"
+                                                        className="h-7 sm:h-8 w-7 sm:w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50"
                                                         onClick={() => handleStatusUpdate(drop._id, "rejected")}
                                                         disabled={!!processingId}
-                                                        title="Revoke Approval (Fraud)"
+                                                        title="Revoke"
                                                     >
                                                         <AlertOctagon className="w-4 h-4 mr-1" />
                                                         Revoke

@@ -1,4 +1,3 @@
-
 import { NextResponse } from "next/server"
 import dbConnect from "@/lib/mongodb"
 import Notification, { INotification } from "@/models/Notification"
@@ -15,24 +14,38 @@ const FALLBACK_NOTIFICATIONS = [
 
 export async function GET() {
     try {
-        await dbConnect()
+        // Try to connect to MongoDB with timeout
+        let dbConnected = false
+        try {
+            await Promise.race([
+                dbConnect(),
+                new Promise((_, reject) => setTimeout(() => reject(new Error('DB connection timeout')), 5000))
+            ])
+            dbConnected = true
+        } catch (dbError) {
+            console.warn("MongoDB connection unavailable, using fallback notification", dbError)
+            dbConnected = false
+        }
 
-        // 1. Check for existing notification for today
+        // Generate notification
         const todayStr = new Date().toISOString().split('T')[0] // "YYYY-MM-DD"
+        let notification: any = null
 
-        // Find notification for TODAY
-        let notification = await Notification.findOne({ dateId: todayStr })
+        // Try to fetch from DB if connected
+        if (dbConnected) {
+            notification = await Notification.findOne({ dateId: todayStr })
+        }
 
         if (notification) {
             return NextResponse.json({ success: true, data: notification })
         }
 
-        // 2. If not found, GENERATE one
+        // Generate new notification
         let newContent = { ...FALLBACK_NOTIFICATIONS[Math.floor(Math.random() * FALLBACK_NOTIFICATIONS.length)] }
 
         try {
             if (process.env.GEMINI_API_KEY) {
-                const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" }) // Optimized for speed
+                const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" })
                 const prompt = `Generate a single short, engaging, and educational notification about e-waste recycling for a smart city app.
                 Categories: Awareness (facts), Action (tips), Local (community), Gamification (points).
                 Output JSON ONLY: { "title": "string", "message": "string (max 120 chars)", "category": "awareness"|"action"|"local"|"gamification" }
@@ -40,7 +53,6 @@ export async function GET() {
 
                 const result = await model.generateContent(prompt)
                 const text = result.response.text()
-                // Simple cleanup to ensure JSON
                 const jsonText = text.replace(/```json/g, "").replace(/```/g, "").trim()
                 const aiContent = JSON.parse(jsonText)
 
@@ -49,22 +61,30 @@ export async function GET() {
                 }
             }
         } catch (aiError) {
-            console.error("AI Generation failed, using fallback", aiError)
+            console.warn("AI generation failed, using fallback", aiError)
         }
 
-        // 3. Save to DB
-        notification = await Notification.create({
-            dateId: todayStr,
-            title: newContent.title,
-            message: newContent.message,
-            category: newContent.category,
-            createdAt: new Date()
-        })
+        // Try to save to DB if connected
+        if (dbConnected) {
+            try {
+                notification = await Notification.create({
+                    dateId: todayStr,
+                    title: newContent.title,
+                    message: newContent.message,
+                    category: newContent.category,
+                    createdAt: new Date()
+                })
+            } catch (saveError) {
+                console.warn("Failed to save notification to DB", saveError)
+            }
+        }
 
-        return NextResponse.json({ success: true, data: notification })
+        return NextResponse.json({ success: true, data: newContent })
 
     } catch (error) {
         console.error("Daily Notification Error", error)
-        return NextResponse.json({ success: false, error: "Failed to fetch notification" }, { status: 500 })
+        // Return a fallback notification even on error
+        const fallback = FALLBACK_NOTIFICATIONS[Math.floor(Math.random() * FALLBACK_NOTIFICATIONS.length)]
+        return NextResponse.json({ success: true, data: fallback })
     }
 }

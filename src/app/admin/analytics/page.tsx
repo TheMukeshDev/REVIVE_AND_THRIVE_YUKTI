@@ -37,20 +37,20 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"]
 
 export default function AnalyticsPage() {
     return (
-        <div className="space-y-8">
+        <div className="space-y-4 sm:space-y-6 md:space-y-8 w-full">
             <header>
-                <h1 className="text-2xl font-bold text-gray-900">Analytics & Impact</h1>
-                <p className="text-gray-600">Deep dive into recycling trends and environmental impact</p>
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground\">Analytics & Impact</h1>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1 sm:mt-2\">Deep dive into recycling trends and environmental impact</p>
             </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8\">
                 {/* Impact Trend Chart */}
                 <Card className="col-span-1 lg:col-span-2">
                     <CardHeader>
                         <CardTitle>Weekly Impact Trends</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="h-[350px] w-full">
+                        <div className="h-48 sm:h-64 md:h-80 lg:h-96 w-full\">
                             <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                 <AreaChart data={data}>
                                     <defs>
@@ -83,7 +83,7 @@ export default function AnalyticsPage() {
                         <CardTitle>E-Waste Composition</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="h-[300px] w-full">
+                        <div className="h-75 w-full">
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
                                     <Pie
@@ -116,21 +116,21 @@ export default function AnalyticsPage() {
                     <CardContent>
                         <ul className="space-y-4">
                             <li className="flex gap-3">
-                                <div className="min-w-[4px] h-full bg-blue-500 rounded-full" />
+                                <div className="min-w-1 h-full bg-blue-500 rounded-full" />
                                 <div>
                                     <p className="font-semibold text-gray-900">Peak Activity</p>
                                     <p className="text-sm text-gray-600">Sunday shows 50% higher drop-off rates than weekdays.</p>
                                 </div>
                             </li>
                             <li className="flex gap-3">
-                                <div className="min-w-[4px] h-full bg-green-500 rounded-full" />
+                                <div className="min-w-1 h-full bg-green-500 rounded-full" />
                                 <div>
                                     <p className="font-semibold text-gray-900">Mobile Dominance</p>
                                     <p className="text-sm text-gray-600">Mobile phones constitute 42% of all recycled items.</p>
                                 </div>
                             </li>
                             <li className="flex gap-3">
-                                <div className="min-w-[4px] h-full bg-yellow-500 rounded-full" />
+                                <div className="min-w-1 h-full bg-yellow-500 rounded-full" />
                                 <div>
                                     <p className="font-semibold text-gray-900">Bin Efficiency</p>
                                     <p className="text-sm text-gray-600">Civil Lines bin reaches capacity 2x faster than others.</p>

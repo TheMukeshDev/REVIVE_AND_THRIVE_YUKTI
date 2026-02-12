@@ -92,11 +92,11 @@ export default function BinsPage() {
     }
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
+        <div className="space-y-4 sm:space-y-6 md:space-y-8 w-full">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
                 <div>
-                    <h1 className="text-3xl font-bold">Bin Management</h1>
-                    <p className="text-muted-foreground">Monitor and manage e-waste collection points.</p>
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">Bin Management</h1>
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-1 sm:mt-2">Monitor and manage e-waste collection points</p>
                 </div>
                 <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
                     <DialogTrigger asChild>
@@ -178,13 +178,13 @@ export default function BinsPage() {
                 </Dialog>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 w-full">
                 {loading ? (
                     Array(6).fill(0).map((_, i) => (
-                        <Skeleton key={i} className="h-48 rounded-xl" />
+                        <Skeleton key={i} className="h-40 sm:h-48 rounded-lg sm:rounded-xl" />
                     ))
                 ) : bins.length === 0 ? (
-                    <div className="col-span-full text-center py-12 text-muted-foreground">
+                    <div className="col-span-full text-center py-8 sm:py-12 text-xs sm:text-sm text-muted-foreground">
                         No bins found. Add your first one!
                     </div>
                 ) : (
