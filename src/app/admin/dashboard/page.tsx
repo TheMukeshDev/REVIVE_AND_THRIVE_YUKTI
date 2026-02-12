@@ -79,17 +79,17 @@ export default function AdminDashboardPage() {
 
     if (loading) {
         return (
-            <div className="space-y-8">
+            <div className="space-y-6 md:space-y-8">
                 <div>
-                    <h1 className="text-4xl font-bold tracking-tight">Dashboard</h1>
-                    <p className="text-muted-foreground mt-2">Loading system statistics...</p>
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">Dashboard</h1>
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-2">Loading system statistics...</p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
                     {[1, 2, 3, 4, 5, 6].map((i) => (
                         <Card key={i} className="animate-pulse">
-                            <CardContent className="p-6">
-                                <Skeleton className="h-4 w-1/2 mb-4" />
-                                <Skeleton className="h-8 w-1/4" />
+                            <CardContent className="p-3 sm:p-4 md:p-6">
+                                <Skeleton className="h-3 sm:h-4 w-1/2 mb-3 sm:mb-4" />
+                                <Skeleton className="h-6 sm:h-8 w-1/4" />
                             </CardContent>
                         </Card>
                     ))}
@@ -99,28 +99,28 @@ export default function AdminDashboardPage() {
     }
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-6 md:space-y-8">
             <div>
-                <h1 className="text-4xl font-bold tracking-tight">Dashboard Overview</h1>
-                <p className="text-muted-foreground mt-2">Monitor system performance and user activity</p>
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">Dashboard Overview</h1>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1 sm:mt-2">Monitor system performance and user activity</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
                 {statCards.map((stat, i) => {
                     const Icon = stat.icon
                     return (
                         <Card key={i} className="border-border hover:border-border/80 hover:shadow-md transition-all duration-200">
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-                                <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                            <CardHeader className="flex flex-row items-start sm:items-center justify-between space-y-0 pb-2 sm:pb-3">
+                                <CardTitle className="text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wider line-clamp-2">
                                     {stat.title}
                                 </CardTitle>
-                                <div className={`p-3 rounded-xl ${stat.bg} ${stat.darkBg}`}>
-                                    <Icon className={`h-5 w-5 ${stat.color}`} />
+                                <div className={`p-2 sm:p-3 rounded-lg sm:rounded-xl shrink-0 ${stat.bg} ${stat.darkBg}`}>
+                                    <Icon className={`h-4 sm:h-5 w-4 sm:w-5 ${stat.color}`} />
                                 </div>
                             </CardHeader>
-                            <CardContent>
-                                <div className="text-3xl font-bold tracking-tight">{stat.value}</div>
-                                <p className="text-xs text-muted-foreground mt-2">Updated just now</p>
+                            <CardContent className="p-3 sm:p-4 md:p-6 pt-0">
+                                <div className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">{stat.value}</div>
+                                <p className="text-xs text-muted-foreground mt-1 sm:mt-2">Updated just now</p>
                             </CardContent>
                         </Card>
                     )
@@ -128,21 +128,21 @@ export default function AdminDashboardPage() {
             </div>
 
             {/* Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
                 <Card className="border-dashed bg-card/50">
-                    <CardHeader>
-                        <CardTitle>Activity Trends</CardTitle>
+                    <CardHeader className="pb-2 sm:pb-3">
+                        <CardTitle className="text-sm sm:text-base">Activity Trends</CardTitle>
                     </CardHeader>
-                    <CardContent className="h-80 flex items-center justify-center">
-                        <p className="text-muted-foreground">📊 Activity Chart (Coming Soon)</p>
+                    <CardContent className="h-48 sm:h-64 md:h-80 flex items-center justify-center text-center">
+                        <p className="text-xs sm:text-sm text-muted-foreground">📊 Activity Chart (Coming Soon)</p>
                     </CardContent>
                 </Card>
                 <Card className="border-dashed bg-card/50">
-                    <CardHeader>
-                        <CardTitle>Bin Locations</CardTitle>
+                    <CardHeader className="pb-2 sm:pb-3">
+                        <CardTitle className="text-sm sm:text-base">Bin Locations</CardTitle>
                     </CardHeader>
-                    <CardContent className="h-80 flex items-center justify-center">
-                        <p className="text-muted-foreground">🗺️ Drop Locations Map (Coming Soon)</p>
+                    <CardContent className="h-48 sm:h-64 md:h-80 flex items-center justify-center text-center">
+                        <p className="text-xs sm:text-sm text-muted-foreground">🗺️ Drop Locations Map (Coming Soon)</p>
                     </CardContent>
                 </Card>
             </div>

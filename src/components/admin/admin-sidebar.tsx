@@ -30,7 +30,7 @@ export default function AdminSidebar() {
     }
 
     return (
-        <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-border bg-card dark:bg-slate-950 flex flex-col">
+        <aside className="hidden md:flex fixed left-0 top-0 z-40 h-screen w-64 border-r border-border bg-card dark:bg-slate-950 flex-col">
             {/* Header */}
             <div className="h-16 flex items-center border-b border-border px-6 gap-3 shrink-0">
                 <div className="w-8 h-8 bg-linear-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
@@ -45,7 +45,8 @@ export default function AdminSidebar() {
             {/* Navigation */}
             <nav className="flex-1 overflow-y-auto px-3 py-6 space-y-2">
                 {navItems.map((item) => {
-                    const isActive = pathname.includes(item.href.split('/').pop() || '')\n                    const Icon = item.icon
+                    const isActive = pathname.includes(item.href.split('/').pop() || '')
+                    const Icon = item.icon
                     
                     return (
                         <Link
