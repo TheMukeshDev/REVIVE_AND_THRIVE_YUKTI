@@ -57,7 +57,7 @@ export default function ProfilePage() {
                     {activeModal === "Linked Accounts" && (
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <span className="font-medium">{t("google")}</span>
+                                <span className="font-medium">Google</span>
                                 <span className="text-green-600 text-xs sm:text-sm font-bold bg-green-100 px-2 py-1 rounded">{t("connected")}</span>
                             </div>
                         </div>
