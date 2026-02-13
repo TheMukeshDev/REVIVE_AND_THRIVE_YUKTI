@@ -54,10 +54,10 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthProvider>
             <LanguageProvider>
-              <div className="min-h-screen flex justify-center md:bg-zinc-100 dark:md:bg-zinc-950 md:items-center md:py-8">
-                <div className="flex flex-col relative w-full h-dvh md:h-auto md:w-full max-w-md md:max-w-none md:rounded-4xl md:shadow-2xl md:border bg-background overflow-hidden ring-1 ring-zinc-900/5 dark:ring-white/10">
+              <div className="min-h-screen flex justify-center md:bg-zinc-100 dark:md:bg-zinc-950 md:items-center md:py-4 lg:py-8">
+                <div className="flex flex-col relative w-full h-dvh md:h-auto md:w-auto max-w-md md:max-w-2xl lg:max-w-4xl md:rounded-4xl md:shadow-2xl md:border bg-background overflow-hidden ring-1 ring-zinc-900/5 dark:ring-white/10">
                   <Header />
-                  <main className="flex-1 w-full overflow-y-auto scrollbar-hide pb-28 md:pb-10 pt-4 px-3 sm:px-4 md:px-6">
+                  <main className="flex-1 w-full overflow-y-auto scrollbar-hide pb-28 md:pb-6 lg:pb-8 pt-4 px-3 sm:px-4 md:px-6 lg:px-8">
                     {children}
                   </main>
                   <div className="z-50">

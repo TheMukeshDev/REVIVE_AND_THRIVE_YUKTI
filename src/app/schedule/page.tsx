@@ -183,7 +183,7 @@ export default function SchedulePage() {
     }
 
     return (
-        <div className="flex flex-col gap-6 pb-20">
+        <div className="flex flex-col gap-4 sm:gap-5 md:gap-4 lg:gap-5 pb-4 sm:pb-6 md:pb-4 lg:pb-6">
             {/* Header with back button */}
             <div className="flex items-center gap-4">
                 {step !== "details" && step !== "success" && (

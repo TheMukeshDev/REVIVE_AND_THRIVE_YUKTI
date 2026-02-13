@@ -51,7 +51,7 @@ export default function ProfilePage() {
     )
 
     return (
-        <div className="flex flex-col gap-4 sm:gap-6 pb-4 sm:pb-6 w-full">
+        <div className="flex flex-col gap-4 sm:gap-5 md:gap-4 lg:gap-5 pb-4 sm:pb-6 md:pb-4 lg:pb-6 w-full">
             {activeModal && (
                 <Modal title={activeModal} onClose={() => setActiveModal(null)}>
                     {activeModal === "Linked Accounts" && (

@@ -97,7 +97,7 @@ export default function RewardsPage() {
     }
 
     return (
-        <div className="flex flex-col gap-6 pb-20">
+        <div className="flex flex-col gap-4 sm:gap-5 md:gap-4 lg:gap-5 pb-4 sm:pb-6 md:pb-4 lg:pb-6">
             <h1 className="text-3xl font-bold">Rewards</h1>
 
             {/* Points Card */}

@@ -59,7 +59,7 @@ export default function ActivityPage() {
     }
 
     return (
-        <div className="flex flex-col gap-6 pb-20 min-h-screen bg-background">
+        <div className="flex flex-col gap-4 sm:gap-5 md:gap-4 lg:gap-5 pb-4 sm:pb-6 md:pb-4 lg:pb-6 min-h-screen bg-background">
             <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md pt-4 pb-2 border-b">
                 <div className="flex items-center gap-3 container max-w-2xl mx-auto px-4">
                     <Button variant="ghost" size="icon" onClick={() => router.back()}>
