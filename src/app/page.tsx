@@ -60,13 +60,13 @@ export default function Home() {
   }, 0)
 
   return (
-    <div className="flex flex-col gap-6 pb-24">
+    <div className="flex flex-col gap-4 sm:gap-6 pb-4 sm:pb-6 w-full">
       {/* Greeting & Stats */}
       <MotionWrapper delay={0} direction="down" variant="slideUp" className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
           {t("greeting")}, <span className="text-primary">{loading ? "User" : (user?.name?.split(" ")[0] || "EcoFriend")}</span> 👋
         </h1>
-        <p className="text-muted-foreground">{t("ready_message")}</p>
+        <p className="text-sm sm:text-base text-muted-foreground">{t("ready_message")}</p>
       </MotionWrapper>
 
       {/* Main Stats Card */}
@@ -83,14 +83,14 @@ export default function Home() {
         )}
       </MotionWrapper>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Quick Actions - Always single column on mobile */}
+      <div className="grid grid-cols-1 gap-3 sm:gap-4">
         <MotionWrapper delay={0.2} direction="left">
           <ActionCard
             href="/scan"
             title={t("scan_button")}
             subtitle={t("scan_subtitle")}
-            icon={<ScanLine className="h-7 w-7" />}
+            icon={<ScanLine className="h-6 w-6 sm:h-7 sm:w-7" />}
             color="primary"
           />
         </MotionWrapper>
@@ -100,7 +100,7 @@ export default function Home() {
             href="/find-bin"
             title={t("find_bin")}
             subtitle={t("find_bin_subtitle")}
-            icon={<MapPin className="h-7 w-7" />}
+            icon={<MapPin className="h-6 w-6 sm:h-7 sm:w-7" />}
             color="secondary"
           />
         </MotionWrapper>
@@ -110,7 +110,7 @@ export default function Home() {
             href="/schedule"
             title={t("schedule_pickup")}
             subtitle={t("schedule_subtitle")}
-            icon={<Calendar className="h-7 w-7" />} // Need to import Calendar
+            icon={<Calendar className="h-6 w-6 sm:h-7 sm:w-7" />}
             color="primary"
           />
         </MotionWrapper>

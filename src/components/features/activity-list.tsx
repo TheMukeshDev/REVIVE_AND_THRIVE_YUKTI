@@ -27,43 +27,43 @@ export function ActivityList({ transactions = [], loading = false }: ActivityLis
     const { t } = useTranslation()
 
     if (loading) {
-        return <div className="space-y-4">
+        return <div className="space-y-3 sm:space-y-4 w-full">
             <div className="flex justify-between items-center">
-                <Skeleton className="h-6 w-32" />
-                <Skeleton className="h-4 w-16" />
+                <Skeleton className="h-5 sm:h-6 w-32" />
+                <Skeleton className="h-3 sm:h-4 w-16" />
             </div>
-            <div className="space-y-3">
-                <Skeleton className="h-16 w-full rounded-2xl" />
-                <Skeleton className="h-16 w-full rounded-2xl" />
-                <Skeleton className="h-16 w-full rounded-2xl" />
+            <div className="space-y-2 sm:space-y-3">
+                <Skeleton className="h-14 sm:h-16 w-full rounded-xl sm:rounded-2xl" />
+                <Skeleton className="h-14 sm:h-16 w-full rounded-xl sm:rounded-2xl" />
+                <Skeleton className="h-14 sm:h-16 w-full rounded-xl sm:rounded-2xl" />
             </div>
         </div>
     }
 
     return (
-        <div className="w-full space-y-4">
+        <div className="w-full space-y-3 sm:space-y-4">
             <MotionWrapper delay={0.2} className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold tracking-tight">{t("recent_activity")}</h2>
-                <Button variant="link" size="sm" asChild className="px-0 text-muted-foreground hover:text-primary">
+                <h2 className="text-base sm:text-lg font-semibold tracking-tight">{t("recent_activity")}</h2>
+                <Button variant="link" size="sm" asChild className="px-0 text-xs sm:text-sm text-muted-foreground hover:text-primary">
                     <Link href="/activity">
                         {t("view_all")} <ArrowRight className="ml-1 h-3 w-3" />
                     </Link>
                 </Button>
             </MotionWrapper>
 
-            <div className="space-y-2">
+            <div className="space-y-2 sm:space-y-2.5">
                 {transactions.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground text-sm bg-secondary/30 rounded-2xl border border-dashed border-border">
+                    <div className="text-center py-6 sm:py-8 text-xs sm:text-sm text-muted-foreground bg-secondary/30 rounded-xl sm:rounded-2xl border border-dashed border-border">
                         {t("no_activity")}
                     </div>
                 ) : (
-                    transactions.map((t, index) => (
-                        <MotionWrapper key={t._id} delay={0.3 + index * 0.1}>
+                    transactions.map((tx, index) => (
+                        <MotionWrapper key={tx._id} delay={0.3 + index * 0.1}>
                             <ActivityItem
-                                title={t.itemName ? `${t.type === 'scan' ? 'Scanned' : 'Recycled'} ${t.itemName}` : `Recycled ${formatItemType(t.itemType)}`}
-                                time={new Date(t.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                                points={t.pointsEarned}
-                                icon={getIcon(t.itemType)}
+                                title={tx.itemName ? `${tx.type === 'scan' ? 'Scanned' : 'Recycled'} ${tx.itemName}` : `Recycled ${formatItemType(tx.itemType)}`}
+                                time={new Date(tx.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                points={tx.pointsEarned}
+                                icon={getIcon(tx.itemType)}
                             />
                         </MotionWrapper>
                     ))

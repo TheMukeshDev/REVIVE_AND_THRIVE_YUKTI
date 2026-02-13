@@ -21,9 +21,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "EcoDrop - Smart E-Waste Bin",
   description: "Find bins, recycle e-waste, and earn rewards.",
+  viewport: "width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover",
   icons: {
     icon: "/logo.svg",
-    apple: "/logo.svg", // Apple touch icon usually prefers PNG
+    apple: "/logo.svg",
   },
 };
 
@@ -36,6 +37,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <ThemeScript />
+        <meta name="theme-color" content="#22c55e" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
@@ -45,21 +49,12 @@ export default function RootLayout({
           <AuthProvider>
             <LanguageProvider>
               <div className="min-h-screen flex justify-center md:bg-zinc-100 dark:md:bg-zinc-950 md:items-center md:py-8">
-                <div className="flex flex-col relative w-full max-w-md h-dvh md:h-212.5 bg-background md:rounded-4xl md:shadow-2xl md:border overflow-hidden ring-1 ring-zinc-900/5 dark:ring-white/10">
+                <div className="flex flex-col relative w-full h-dvh md:h-auto md:w-full max-w-md md:max-w-none md:rounded-4xl md:shadow-2xl md:border bg-background overflow-hidden ring-1 ring-zinc-900/5 dark:ring-white/10">
                   <Header />
-                  <main className="flex-1 w-full p-4 pt-6 overflow-y-auto scrollbar-hide pb-24">
+                  <main className="flex-1 w-full overflow-y-auto scrollbar-hide pb-28 md:pb-10 pt-4 px-3 sm:px-4 md:px-6">
                     {children}
                   </main>
-                  {/* Bottom Nav is constrained within this container due to strict width, but fixed positioning might break out. 
-                    However, BottomNav uses `fixed bottom-0` which routes to viewport. 
-                    To fix this for the "phone view" on desktop, BottomNav needs to be absolute within this relative container 
-                    OR we accept it floats at bottom of screen on desktop (which is weird). 
-                    
-                    BETTER FIX: In BottomNav, change `fixed` to `absolute` when on desktop if we want it inside of the phone frame?
-                    Actually, `layout.tsx` defines the container. If I leave BottomNav as fixed, it attaches to window.
-                    Solution: Create a context or just update BottomNav to be `absolute bottom-0` and the container relative.
-                  */}
-                  <div className="md:absolute md:bottom-0 md:w-full z-50">
+                  <div className="z-50">
                     <BottomNav />
                   </div>
                 </div>

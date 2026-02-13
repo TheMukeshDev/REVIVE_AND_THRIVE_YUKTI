@@ -20,10 +20,10 @@ export function BottomNav() {
     ]
 
     return (
-        <div className="fixed md:absolute bottom-0 left-0 right-0 z-50 w-full overflow-visible pointer-events-none">
-            {/* Nav Container - pointer-events-auto to enable clicks */}
-            <div className="pointer-events-auto bg-background/80 backdrop-blur-xl border-t pb-safe-area pt-2 max-w-md mx-auto relative rounded-t-3xl shadow-[0_-5px_10px_rgba(0,0,0,0.02)]">
-                <nav className="flex items-end justify-between px-6 pb-4 pt-2">
+        <div className="relative w-full">
+            {/* Nav Container */}
+            <div className="w-full bg-background/80 backdrop-blur-xl border-t pb-safe pt-2 relative rounded-t-3xl shadow-[0_-5px_10px_rgba(0,0,0,0.02)]">
+                <nav className="flex items-end justify-between px-6 pb-4 pt-2 max-w-md mx-auto">
                     {/* Left Group */}
                     <div className="flex gap-8">
                         {links.slice(0, 2).map((link) => (

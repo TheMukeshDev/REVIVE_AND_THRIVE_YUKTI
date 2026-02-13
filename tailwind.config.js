@@ -5,7 +5,7 @@ export default {
         "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
         "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     ],
-    darkMode: "class", // Use class-based dark mode
+    darkMode: "class",
     theme: {
         extend: {
             colors: {
@@ -31,6 +31,14 @@ export default {
                 lg: "var(--radius)",
                 md: "calc(var(--radius) - 2px)",
                 sm: "calc(var(--radius) - 4px)",
+            },
+            spacing: {
+                "safe": "max(1rem, env(safe-area-inset-bottom))",
+                "safe-area": "env(safe-area-inset-bottom)",
+            },
+            height: {
+                "dvh": "100dvh",
+                "svh": "100svh",
             },
             keyframes: {
                 "accordion-down": {
