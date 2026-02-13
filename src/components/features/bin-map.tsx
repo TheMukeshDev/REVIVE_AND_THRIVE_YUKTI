@@ -105,7 +105,7 @@ export function BinMap({ bins, userLocation, usingDefaultLocation, onBinSelect, 
                             onCloseClick={() => setActiveBin(null)}
                             pixelOffset={[0, -30]}
                         >
-                            <div className="text-zinc-900 p-0 min-w-[160px] max-w-[200px]">
+                            <div className="text-zinc-900 p-0 min-w-40 max-w-50">
                                 <div className="flex justify-between items-start mb-1.5">
                                     <h3 className="font-bold text-xs pr-2 leading-tight">{activeBin.name}</h3>
                                     <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider text-white ${activeBin.status === 'operational' ? 'bg-green-500' : 'bg-yellow-500'}`}>

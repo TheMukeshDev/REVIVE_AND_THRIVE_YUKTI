@@ -35,7 +35,7 @@ export default function BinSimulatorPage() {
                     <div className="w-16 h-4 bg-black rounded-b-xl"></div>
                 </div>
 
-                <div className="h-[600px] flex flex-col relative">
+                <div className="h-150 flex flex-col relative">
                     {/* Header Status Bar */}
                     <div className="p-4 pt-8 flex justify-between items-center bg-zinc-900/50">
                         <div className="flex items-center gap-2">

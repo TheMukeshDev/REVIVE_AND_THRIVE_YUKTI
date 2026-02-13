@@ -9,7 +9,11 @@ import Bin from "../src/models/Bin.ts"
 import User from "../src/models/User.ts"
 import Reward from "../src/models/Reward.ts"
 
-const MONGODB_URI = process.env.MONGODB_URI
+const MONGODB_URI = process.env.MONGODB_URI || process.env.DATABASE_URL || process.env.MONGO_URL
+
+if (!MONGODB_URI) {
+    console.log("⚠️  Tip: Set MONGODB_URI, DATABASE_URL, or MONGO_URL environment variable in .env.local or .env")
+}
 
 const ITEMS = ["plastic_bottle", "glass_bottle", "aluminum_can", "smartphone", "laptop", "battery"]
 const STATUSES = ["operational", "full", "maintenance"]

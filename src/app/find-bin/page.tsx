@@ -261,7 +261,7 @@ function FindBinPageContent() {
             </div>
 
             {/* Map Section - Integrated elegantly */}
-            <div className=" aspect-[4/3] w-full rounded-2xl overflow-hidden shadow-sm border border-border/50 relative z-0 mt-2">
+            <div className="w-full rounded-2xl overflow-hidden shadow-sm border border-border/50 relative z-0 mt-2 h-64 sm:h-80 md:h-96 lg:h-96">
                 {loadingBins ? (
                     <Skeleton className="w-full h-full" />
                 ) : (
@@ -279,7 +279,7 @@ function FindBinPageContent() {
 
             {/* Active Drop Banner */}
             {isDropFlow && (
-                <div className="p-3 bg-gradient-to-r from-primary/10 to-transparent border-l-4 border-primary rounded-xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-2">
+                <div className="p-3 bg-linear-to-r from-primary/10 to-transparent border-l-4 border-primary rounded-xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-2">
                     <div className="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold text-lg shadow-sm">
                         {aiConfidence ? Math.round(aiConfidence * 100) : "..."}
                         <span className="text-[10px]">%</span>
