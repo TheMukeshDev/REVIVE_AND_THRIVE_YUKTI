@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence, Variants } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { ReactNode } from "react"
 
@@ -9,7 +9,9 @@ interface MotionWrapperProps {
     className?: string
     delay?: number
     direction?: "up" | "down" | "left" | "right" | "none"
-    variant?: "fadeIn" | "slideUp" | "scale" | "none"
+    variant?: "fadeIn" | "slideUp" | "scale" | "blur" | "rotate" | "elastic" | "none"
+    duration?: number
+    stagger?: boolean
 }
 
 export function MotionWrapper({
@@ -18,28 +20,109 @@ export function MotionWrapper({
     delay = 0,
     direction = "up",
     variant = "slideUp",
+    duration = 0.5,
+    stagger = false,
 }: MotionWrapperProps) {
-    const getVariants = () => {
+    // Spring animation configuration for smooth, natural motion
+    const springConfig = {
+        type: "spring",
+        stiffness: 60,
+        damping: 15,
+        mass: 1,
+    }
+    
+    // Easing curves for different animation styles
+    const easing = [0.21, 0.47, 0.32, 0.98] // Cubic bezier for smooth ease
+
+    const getVariants = (): Variants => {
+        const directionOffsets = {
+            up: { x: 0, y: 20 },
+            down: { x: 0, y: -20 },
+            left: { x: 20, y: 0 },
+            right: { x: -20, y: 0 },
+            none: { x: 0, y: 0 },
+        }
+        
+        const offset = directionOffsets[direction]
+
         switch (variant) {
             case "fadeIn":
                 return {
                     hidden: { opacity: 0 },
-                    visible: { opacity: 1 },
+                    visible: {
+                        opacity: 1,
+                        transition: {
+                            duration,
+                            ease: easing,
+                        },
+                    },
                 }
+            
             case "scale":
                 return {
-                    hidden: { opacity: 0, scale: 0.95 },
-                    visible: { opacity: 1, scale: 1 },
+                    hidden: { opacity: 0, scale: 0.9 },
+                    visible: {
+                        opacity: 1,
+                        scale: 1,
+                        transition: {
+                            duration,
+                            ease: easing,
+                        },
+                    },
                 }
+            
+            case "blur":
+                return {
+                    hidden: { opacity: 0, filter: "blur(10px)" },
+                    visible: {
+                        opacity: 1,
+                        filter: "blur(0px)",
+                        transition: {
+                            duration,
+                            ease: easing,
+                        },
+                    },
+                }
+            
+            case "rotate":
+                return {
+                    hidden: { opacity: 0, rotate: -10, scale: 0.95 },
+                    visible: {
+                        opacity: 1,
+                        rotate: 0,
+                        scale: 1,
+                        transition: {
+                            duration,
+                            ease: easing,
+                        },
+                    },
+                }
+            
+            case "elastic":
+                return {
+                    hidden: { opacity: 0, ...offset, scale: 0.8 },
+                    visible: {
+                        opacity: 1,
+                        x: 0,
+                        y: 0,
+                        scale: 1,
+                        transition: springConfig,
+                    },
+                }
+            
             case "slideUp":
             default:
-                const offset = 20
-                const x = direction === "left" ? offset : direction === "right" ? -offset : 0
-                const y = direction === "up" ? offset : direction === "down" ? -offset : 0
-
                 return {
-                    hidden: { opacity: 0, x, y },
-                    visible: { opacity: 1, x: 0, y: 0 },
+                    hidden: { opacity: 0, ...offset },
+                    visible: {
+                        opacity: 1,
+                        x: 0,
+                        y: 0,
+                        transition: {
+                            duration,
+                            ease: easing,
+                        },
+                    },
                 }
         }
     }
@@ -51,13 +134,14 @@ export function MotionWrapper({
             viewport={{ once: true, margin: "-50px" }}
             variants={getVariants()}
             transition={{
-                duration: 0.5,
-                delay: delay,
-                ease: [0.21, 0.47, 0.32, 0.98], // Custom spring-like easing
+                delay: stagger ? delay * 0.1 : delay,
             }}
-            className={cn(className)}
+            className={cn("w-full", className)}
         >
             {children}
+        </motion.div>
+    )
+}
         </motion.div>
     )
 }

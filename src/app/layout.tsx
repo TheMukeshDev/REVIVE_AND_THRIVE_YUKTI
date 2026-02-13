@@ -48,21 +48,38 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground scroll-smooth`}
         suppressHydrationWarning
       >
         <ThemeProvider>
           <AuthProvider>
             <LanguageProvider>
-              <div className="min-h-screen flex justify-center md:bg-zinc-100 dark:md:bg-zinc-950 md:items-center md:py-4 lg:py-8">
-                <div className="flex flex-col relative w-full h-dvh md:h-auto md:w-auto max-w-md md:max-w-2xl lg:max-w-4xl md:rounded-4xl md:shadow-2xl md:border bg-background overflow-hidden ring-1 ring-zinc-900/5 dark:ring-white/10">
+              {/* Desktop Background Container */}
+              <div className="fixed inset-0 -z-10 hidden md:block bg-linear-to-br from-zinc-100 to-zinc-100 dark:from-zinc-950 dark:to-zinc-950" />
+              
+              {/* Main Responsive Layout Container */}
+              <div className="min-h-screen flex flex-col items-center justify-start md:justify-center md:py-6 lg:py-8 xl:py-10">
+                {/* App Container with Responsive Sizing */}
+                <div className="flex flex-col relative w-full h-dvh md:h-auto md:max-h-[90vh] md:rounded-3xl lg:rounded-4xl md:shadow-xl lg:shadow-2xl md:border md:border-border bg-background overflow-hidden ring-1 ring-zinc-900/5 dark:ring-white/10 transition-all duration-300">
+                  
+                  {/* Header */}
                   <Header />
-                  <main className="flex-1 w-full overflow-y-auto scrollbar-hide pb-28 md:pb-6 lg:pb-8 pt-4 px-3 sm:px-4 md:px-6 lg:px-8">
-                    {children}
+                  
+                  {/* Main Content Area */}
+                  <main className="flex-1 w-full overflow-y-auto overflow-x-hidden scrollbar-hide">
+                    {/* Content Wrapper with Responsive Padding */}
+                    <div className="flex flex-col relative w-full h-full">
+                      {/* Adaptive Content Padding and Layout */}
+                      <div className="flex-1 px-3 sm:px-4 md:px-6 lg:px-8 pt-4 sm:pt-6 md:pt-8 pb-24 sm:pb-20 md:pb-8 lg:pb-10">
+                        {children}
+                      </div>
+                    </div>
                   </main>
-                  <div className="z-50">
+                  
+                  {/* Bottom Navigation */}
+                  <nav className="sticky bottom-0 z-50 w-full" role="navigation">
                     <BottomNav />
-                  </div>
+                  </nav>
                 </div>
               </div>
             </LanguageProvider>
