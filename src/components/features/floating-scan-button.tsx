@@ -13,7 +13,7 @@ export function FloatingScanButton() {
                     whileTap={{ scale: 0.95 }}
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="relative z-50 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-tr from-primary to-green-400 text-primary-foreground shadow-lg shadow-primary/40 ring-4 ring-background"
+                    className="relative z-50 flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-tr from-primary to-green-400 text-primary-foreground shadow-lg shadow-primary/40 ring-4 ring-background"
                 >
                     {/* Pulse Effect */}
                     <motion.div

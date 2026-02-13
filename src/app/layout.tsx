@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { BottomNav } from "@/components/layout/bottom-nav";
@@ -18,10 +18,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1.0,
+  maximumScale: 5.0,
+  viewportFit: "cover",
+};
+
 export const metadata: Metadata = {
   title: "EcoDrop - Smart E-Waste Bin",
   description: "Find bins, recycle e-waste, and earn rewards.",
-  viewport: "width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover",
   icons: {
     icon: "/logo.svg",
     apple: "/logo.svg",

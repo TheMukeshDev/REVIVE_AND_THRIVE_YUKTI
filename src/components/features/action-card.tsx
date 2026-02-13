@@ -30,7 +30,7 @@ export function ActionCard({ href, icon, title, subtitle, className, color = "pr
                         : "bg-secondary/5 hover:bg-secondary/10 border-secondary/10",
                     className
                 )}>
-                    <CardContent className="flex flex-col items-center justify-center p-4 sm:p-6 gap-3 sm:gap-4 text-center h-full min-h-[120px] sm:min-h-[140px]">
+                    <CardContent className="flex flex-col items-center justify-center p-4 sm:p-6 gap-3 sm:gap-4 text-center h-full min-h-30 sm:min-h-35">
                         <div className={cn(
                             "h-12 w-12 sm:h-14 sm:w-14 rounded-full flex items-center justify-center shadow-lg transition-transform group-hover:scale-110 shrink-0",
                             color === "primary"

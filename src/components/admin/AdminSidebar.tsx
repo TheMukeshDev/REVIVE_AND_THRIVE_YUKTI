@@ -38,7 +38,7 @@ export default function AdminSidebar() {
                 {/* Header */}
                 <div className="h-16 flex items-center px-6 border-b border-gray-200">
                     <Logo className="w-8 h-8 mr-3" />
-                    <span className="text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                    <span className="text-xl font-bold bg-linear-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                         EcoDrop Admin
                     </span>
                 </div>

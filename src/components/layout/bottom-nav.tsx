@@ -56,7 +56,7 @@ function NavLink({ item, isActive }: { item: any, isActive: boolean }) {
         <Link
             href={item.href}
             className={cn(
-                "flex flex-col items-center gap-1 min-w-[44px] min-h-[44px] justify-center transition-colors",
+                "flex flex-col items-center gap-1 min-w-11 min-h-11 justify-center transition-colors",
                 isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
             )}
         >

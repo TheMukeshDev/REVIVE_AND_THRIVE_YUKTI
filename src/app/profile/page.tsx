@@ -238,7 +238,7 @@ export default function ProfilePage() {
 function BadgeItem({ icon, title, color, onClick }: { icon: string, title: string, color: string, onClick?: () => void }) {
     return (
         <div
-            className={`flex flex-col items-center justify-center p-2 sm:p-3 rounded-lg sm:rounded-xl min-w-[70px] sm:min-w-[80px] shadow-sm border border-transparent ${color} cursor-pointer active:scale-95 transition-transform`}
+            className={`flex flex-col items-center justify-center p-2 sm:p-3 rounded-lg sm:rounded-xl min-w-17.5 sm:min-w-20 shadow-sm border border-transparent ${color} cursor-pointer active:scale-95 transition-transform`}
             onClick={onClick}
         >
             <span className="text-xl sm:text-2xl mb-0.5 sm:mb-1">{icon}</span>

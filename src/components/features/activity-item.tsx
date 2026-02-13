@@ -21,7 +21,7 @@ export function ActivityItem({ title, time, points, icon: Icon }: ActivityItemPr
             whileTap="tap"
         >
             <div className="flex items-center gap-2 sm:gap-3 overflow-hidden flex-1 min-w-0">
-                <div className="h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 rounded-full bg-primary/10 flex items-center justify-center">
+                <div className="h-9 w-9 sm:h-10 sm:w-10 shrink-0 rounded-full bg-primary/10 flex items-center justify-center">
                     <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 </div>
                 <div className="flex flex-col min-w-0 flex-1">
@@ -29,7 +29,7 @@ export function ActivityItem({ title, time, points, icon: Icon }: ActivityItemPr
                     <span className="text-[11px] sm:text-xs text-muted-foreground">{time}</span>
                 </div>
             </div>
-            <div className="text-xs sm:text-sm font-semibold text-primary whitespace-nowrap ml-2 flex-shrink-0">
+            <div className="text-xs sm:text-sm font-semibold text-primary whitespace-nowrap ml-2 shrink-0">
                 +{points}
             </div>
         </motion.div>
