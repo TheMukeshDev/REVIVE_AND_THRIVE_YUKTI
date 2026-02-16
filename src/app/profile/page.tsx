@@ -81,6 +81,50 @@ export default function ProfilePage() {
                             </div>
                         </div>
                     )}
+                    {activeModal === "Privacy & Security" && (
+                        <div className="space-y-5">
+                            <div>
+                                <h4 className="font-semibold text-sm mb-2 text-primary">🔒 Data Protection</h4>
+                                <p className="text-xs text-muted-foreground leading-relaxed">
+                                    Your personal information is encrypted and securely stored. We only collect data necessary for e-waste recycling tracking and environmental impact verification.
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <h4 className="font-semibold text-sm mb-2 text-primary">📍 Location Data</h4>
+                                <p className="text-xs text-muted-foreground leading-relaxed">
+                                    Location is used only to find nearby bins and verify drop-off locations. It's never shared with third parties without your consent.
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <h4 className="font-semibold text-sm mb-2 text-primary">📸 Camera & Images</h4>
+                                <p className="text-xs text-muted-foreground leading-relaxed">
+                                    Images captured during item scanning are processed locally and on our secure servers for AI verification only. They are deleted after verification is complete.
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <h4 className="font-semibold text-sm mb-2 text-primary">🔑 Account Security</h4>
+                                <p className="text-xs text-muted-foreground leading-relaxed">
+                                    Your password is never stored in plain text. Use strong, unique passwords and enable email verification for added security.
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <h4 className="font-semibold text-sm mb-2 text-primary">📊 Data Usage</h4>
+                                <p className="text-xs text-muted-foreground leading-relaxed">
+                                    Your anonymized data helps us improve AI models and track environmental impact. You can request a data report anytime.
+                                </p>
+                            </div>
+                            
+                            <div className="pt-3 border-t">
+                                <p className="text-[10px] text-muted-foreground italic">
+                                    For full privacy policy, visit our website or contact support@ecodrop.app
+                                </p>
+                            </div>
+                        </div>
+                    )}
                 </Modal>
             )}
 

@@ -35,7 +35,7 @@ export function VerificationSuccessModal({
                 exit={{ opacity: 0, scale: 0.9, y: 20 }}
                 className="w-full max-w-md"
             >
-                <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
+                <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-green-200">
                     <CardContent className="p-6 space-y-6">
                         {/* Success Icon */}
                         <motion.div
@@ -147,7 +147,7 @@ export function VerificationSuccessModal({
                             transition={{ delay: 0.7 }}
                             className="text-center"
                         >
-                            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-4 py-2 rounded-full text-sm font-medium">
+                            <div className="inline-flex items-center gap-2 bg-linear-to-r from-yellow-400 to-orange-400 text-white px-4 py-2 rounded-full text-sm font-medium">
                                 <Trophy className="h-4 w-4" />
                                 Eco Warrior Achievement
                             </div>

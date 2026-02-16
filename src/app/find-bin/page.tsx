@@ -43,6 +43,7 @@ function FindBinPageContent() {
     // Client-only state for AI results
     const [aiConfidence, setAiConfidence] = useState<number | null>(null)
     const [scannedItemType, setScannedItemType] = useState<string | null>(null)
+    const [currentTransactionId, setCurrentTransactionId] = useState<string | null>(null)
 
     // Location Hook
     const { latitude, longitude, error: locationError, loading: locationLoading, usingDefault, retryLocation } = useUserLocation()
@@ -109,9 +110,11 @@ function FindBinPageContent() {
             const storedConfidence = sessionStorage.getItem("ai_confidence")
             const storedItem = sessionStorage.getItem("scanned_item_type")
             const sessionActive = sessionStorage.getItem("drop_flow_active") === "true"
+            const storedTxId = sessionStorage.getItem("pending_transaction_id")
 
             if (storedConfidence) setAiConfidence(parseFloat(storedConfidence))
             if (storedItem) setScannedItemType(storedItem)
+            if (storedTxId) setCurrentTransactionId(storedTxId)
 
             if (sessionActive && !isDropFlow) {
                 setIsDropFlow(true)
@@ -279,16 +282,23 @@ function FindBinPageContent() {
 
             {/* Active Drop Banner */}
             {isDropFlow && (
-                <div className="p-3 bg-linear-to-r from-primary/10 to-transparent border-l-4 border-primary rounded-xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-2">
-                    <div className="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold text-lg shadow-sm">
+                <div className="p-4 sm:p-5 bg-linear-to-r from-primary/15 to-transparent border-l-4 border-primary rounded-lg flex items-start gap-4 animate-in fade-in slide-in-from-bottom-2 shadow-md">
+                    <div className="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center font-bold text-base shrink-0 shadow-md">
                         {aiConfidence ? Math.round(aiConfidence * 100) : "..."}
-                        <span className="text-[10px]">%</span>
+                        <span className="text-[9px]">%</span>
                     </div>
-                    <div>
-                        <h3 className="font-bold text-sm">
+                    <div className="flex-1 min-w-0">
+                        <h3 className="font-bold text-sm sm:text-base text-foreground">
                             <span className="capitalize">{scannedItemType || "Item"}</span> Detected
                         </h3>
-                        <p className="text-xs text-muted-foreground">Nearest bins shown below</p>
+                        {currentTransactionId && (
+                            <div className="mt-1.5 bg-white/50 dark:bg-black/30 px-2.5 py-1.5 rounded border border-primary/30 inline-block">
+                                <p className="text-xs text-primary font-mono font-semibold">
+                                    TXN ID: {currentTransactionId}
+                                </p>
+                            </div>
+                        )}
+                        <p className="text-xs text-muted-foreground mt-1.5">Nearest bins shown below</p>
                     </div>
                 </div>
             )}
