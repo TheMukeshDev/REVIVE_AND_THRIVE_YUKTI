@@ -1,15 +1,11 @@
 import { NextResponse } from "next/server"
-import dbConnect from "@/lib/mongodb"
-import Transaction from "@/models/Transaction"
-import User from "@/models/User"
 import { isWithinRadius } from "@/lib/geo"
 import crypto from "crypto"
 
 const PROXIMITY_RADIUS_METERS = 100 // User must be within 100m of bin
-const MAX_DROPOFFS_PER_DAY = 5
 const MAX_TIMESTAMP_AGE_MINUTES = 15 // Reject timestamps older than 15 minutes
 
-// Static bin data for verification (no DB needed for bins)
+// Static bin data for verification (no DB needed)
 const STATIC_BINS: Record<string, { _id: string; name: string; latitude: number; longitude: number; status: string }> = {
     "bin-001": { _id: "bin-001", name: "B Block Bin", latitude: 25.5263407, longitude: 81.8482162, status: "operational" },
     "bin-002": { _id: "bin-002", name: "Civil Lines E-Bin", latitude: 25.4534, longitude: 81.8340, status: "operational" },
@@ -29,8 +25,6 @@ function generateTransactionId(): string {
 
 export async function POST(request: Request) {
     try {
-        await dbConnect()
-
         const body = await request.json()
         const { userId, binId, items, verificationMethod, userLocation, capturedAt, transactionId } = body
 
@@ -71,16 +65,7 @@ export async function POST(request: Request) {
             }
         }
 
-        // 1. Check if user exists
-        const user = await User.findById(userId)
-        if (!user) {
-            return NextResponse.json({
-                success: false,
-                error: "User not found"
-            }, { status: 404 })
-        }
-
-        // 2. Check if bin exists and is operational (static data)
+        // 1. Check if bin exists and is operational (static data)
         const bin = STATIC_BINS[binId]
         if (!bin) {
             return NextResponse.json({
@@ -96,7 +81,7 @@ export async function POST(request: Request) {
             }, { status: 400 })
         }
 
-        // 3. Location validation (for QR scans, enforce proximity)
+        // 2. Location validation (for QR scans, enforce proximity)
         if (verificationMethod === 'qr_scan') {
             const isNearBin = isWithinRadius(
                 userLocation.latitude,
@@ -114,27 +99,7 @@ export async function POST(request: Request) {
             }
         }
 
-        // 4. Rate limiting check (max 5 drop-offs per day)
-        const today = new Date()
-        today.setHours(0, 0, 0, 0)
-        const tomorrow = new Date(today)
-        tomorrow.setDate(tomorrow.getDate() + 1)
-
-        const todaysDropoffs = await Transaction.countDocuments({
-            userId: user._id,
-            type: 'recycle',
-            status: 'approved',
-            createdAt: { $gte: today, $lt: tomorrow }
-        })
-
-        if (todaysDropoffs >= MAX_DROPOFFS_PER_DAY) {
-            return NextResponse.json({
-                success: false,
-                error: `Daily limit reached (${MAX_DROPOFFS_PER_DAY} drop-offs per day). Try again tomorrow!`
-            }, { status: 429 })
-        }
-
-        // 5. Calculate points and create transactions
+        // 3. Calculate points and build transaction records (no DB writes)
         const transactions: any[] = []
         let totalPoints = 0
         let totalItems = 0
@@ -150,33 +115,34 @@ export async function POST(request: Request) {
             }
 
             // Generate unique transaction ID for each item
-            // If a client-side transactionId is provided (from scan), append index to make unique
             const currentTxId = (transactionId && itemIndex === 0) 
                 ? transactionId 
                 : (transactionId ? `${transactionId}-${itemIndex}` : generateTransactionId())
 
-            // Points calculation (value × 2)
+            // Points calculation (value x 2)
             const pointsEarned = Math.round(value * 2)
 
             // CO2 estimation (rough: 0.5kg per item)
             const co2Saved = 0.5
 
-            const tx = await Transaction.create({
-                userId: user._id,
+            const tx = {
+                _id: crypto.randomBytes(12).toString('hex'),
+                userId,
                 binId: bin._id,
                 transactionId: currentTxId,
                 type: 'recycle',
                 itemName,
                 itemType,
-                confidence: 1.0, // Manual drop-off has 100% confidence
+                confidence: 1.0,
                 value,
                 pointsEarned,
                 verificationMethod: verificationMethod || 'self_report',
                 status: 'approved',
-                verifiedAt: new Date(),
-                capturedAt: capturedAt ? new Date(capturedAt) : new Date(),
-                verificationLocation: userLocation
-            })
+                verifiedAt: new Date().toISOString(),
+                capturedAt: capturedAt || new Date().toISOString(),
+                verificationLocation: userLocation,
+                createdAt: new Date().toISOString()
+            }
 
             transactions.push(tx)
             totalPoints += pointsEarned
@@ -193,15 +159,6 @@ export async function POST(request: Request) {
             }, { status: 400 })
         }
 
-        // 6. Update user stats atomically
-        await User.findByIdAndUpdate(user._id, {
-            $inc: {
-                points: totalPoints,
-                totalItemsRecycled: totalItems,
-                totalCO2Saved: totalCO2
-            }
-        })
-
         return NextResponse.json({
             success: true,
             data: {
@@ -211,7 +168,7 @@ export async function POST(request: Request) {
                 transactionIds: transactions.map(tx => tx.transactionId),
                 transactions
             },
-            message: `🎉 Drop-off verified! You earned ${totalPoints} points! Transaction ID: ${transactions[0].transactionId}`
+            message: `Drop-off verified! You earned ${totalPoints} points! Transaction ID: ${transactions[0].transactionId}`
         })
 
     } catch (error) {

@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server"
-import dbConnect from "@/lib/mongodb"
-import User from "@/models/User"
-import { comparePassword } from "@/lib/auth-utils"
+import crypto from "crypto"
 
+// No database — accept any email/password and return a user object for client-side storage
 export async function POST(request: Request) {
     try {
-        await dbConnect()
         const body = await request.json()
         const { email, password } = body
 
@@ -16,31 +14,27 @@ export async function POST(request: Request) {
             )
         }
 
-        // Must explicitly select password since it's hidden by default
-        const user = await User.findOne({ email }).select("+password")
+        // Generate a consistent user ID from email (same email = same ID)
+        const userId = crypto.createHash('md5').update(email).digest('hex').slice(0, 24)
 
-        if (!user || !user.password) {
-            return NextResponse.json(
-                { success: false, error: "Invalid credentials" },
-                { status: 401 }
-            )
+        // Extract name and username from email
+        const emailParts = email.split('@')[0]
+        const name = emailParts.charAt(0).toUpperCase() + emailParts.slice(1)
+
+        const userResponse = {
+            _id: userId,
+            name: name,
+            username: emailParts,
+            email: email,
+            role: "user",
+            isActive: true,
+            points: 100,
+            totalItemsRecycled: 0,
+            totalCO2Saved: 0,
+            suspiciousFlags: [],
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
         }
-
-        const isMatch = await comparePassword(password, user.password)
-
-        if (!isMatch) {
-            return NextResponse.json(
-                { success: false, error: "Invalid credentials" },
-                { status: 401 }
-            )
-        }
-
-        // Return user data (excluding password)
-        const userResponse = user.toObject()
-        delete userResponse.password
-
-        // In a real app, we'd set a JWT cookie here.
-        // For this demo, we'll return the user object for client-side storage/context.
 
         return NextResponse.json({ success: true, data: userResponse })
 

@@ -1,14 +1,11 @@
-
 import { NextResponse } from "next/server"
-import dbConnect from "@/lib/mongodb"
-import User from "@/models/User"
 
 export const dynamic = 'force-dynamic'
 
+// No database — user data is managed client-side in localStorage
+// This endpoint just validates the request and returns a consistent response
 export async function GET(request: Request) {
     try {
-        await dbConnect()
-
         const { searchParams } = new URL(request.url)
         const id = searchParams.get("id")
 
@@ -16,15 +13,16 @@ export async function GET(request: Request) {
             return NextResponse.json({ success: false, error: "User ID required" }, { status: 400 })
         }
 
-        const user = await User.findById(id)
-
-        if (!user) {
-            return NextResponse.json({ success: false, error: "User not found" }, { status: 404 })
-        }
-
+        // Return a minimal success response — actual user data lives in localStorage
+        // The client will use its local copy if this succeeds
         return NextResponse.json({
             success: true,
-            data: user
+            data: {
+                _id: id,
+                points: 100,
+                totalItemsRecycled: 0,
+                totalCO2Saved: 0
+            }
         })
 
     } catch (error: any) {

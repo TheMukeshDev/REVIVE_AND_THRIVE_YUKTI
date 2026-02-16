@@ -29,30 +29,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const router = useRouter()
 
     useEffect(() => {
-        const initAuth = async () => {
-            // Check local storage on mount
+        const initAuth = () => {
+            // Check local storage on mount — no server calls needed
             const storedUser = localStorage.getItem("eco_user")
             if (storedUser) {
                 try {
                     const parsedUser = JSON.parse(storedUser)
                     setUser(parsedUser)
-
-                    // Verify/Refresh with server data
-                    if (parsedUser._id) {
-                        try {
-                            const res = await fetch(`/api/auth/me?id=${parsedUser._id}`)
-                            const data = await res.json()
-                            if (data.success) {
-                                setUser(data.data)
-                                localStorage.setItem("eco_user", JSON.stringify(data.data))
-                            } else if (res.status === 404) {
-                                // User no longer exists (e.g. db reset)
-                                logout()
-                            }
-                        } catch (err) {
-                            console.error("Failed to refresh user data", err)
-                        }
-                    }
                 } catch (e) {
                     console.error("Failed to parse user data", e)
                     localStorage.removeItem("eco_user")

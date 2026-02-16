@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server"
-import dbConnect from "@/lib/mongodb"
-import User from "@/models/User"
-import { hashPassword } from "@/lib/auth-utils"
+import crypto from "crypto"
 
+// No database — create user object directly and return it for client-side storage
 export async function POST(request: Request) {
     try {
-        await dbConnect()
         const body = await request.json()
         const { name, username, email, password } = body
 
@@ -16,30 +14,30 @@ export async function POST(request: Request) {
             )
         }
 
-        const existingUser = await User.findOne({ $or: [{ email }, { username }] })
-        if (existingUser) {
-            const field = existingUser.email === email ? "Email" : "Username"
+        if (password.length < 8) {
             return NextResponse.json(
-                { success: false, error: `${field} already exists` },
+                { success: false, error: "Password must be at least 8 characters" },
                 { status: 400 }
             )
         }
 
-        const hashedPassword = await hashPassword(password)
+        // Generate a unique user ID without database
+        const userId = crypto.randomBytes(12).toString('hex')
 
-        const newUser = await User.create({
+        const userResponse = {
+            _id: userId,
             name,
             username,
             email,
-            password: hashedPassword,
+            role: "user",
+            isActive: true,
             points: 100, // Welcome bonus
             totalItemsRecycled: 0,
-            totalCO2Saved: 0
-        })
-
-        // Exclude password from response
-        const userResponse = newUser.toObject()
-        delete userResponse.password
+            totalCO2Saved: 0,
+            suspiciousFlags: [],
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        }
 
         return NextResponse.json({ success: true, data: userResponse })
 
