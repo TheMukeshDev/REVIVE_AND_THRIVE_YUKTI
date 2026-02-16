@@ -1,16 +1,13 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef, Suspense } from "react"
+import dynamic from "next/dynamic"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth-context"
 import { useUserLocation } from "@/hooks/use-user-location"
 import { useEWDropVerification } from "@/hooks/use-ew-drop-verification"
 import { detectCityFromCoordinates } from "@/lib/city-detection"
-import { BinMap } from "@/components/features/bin-map"
 import { BinList } from "@/components/features/bin-list"
-import { DropoffConfirmationModal } from "@/components/features/dropoff-confirmation-modal"
-import { VerificationBanner } from "@/components/features/verification-banner"
-import { VerificationSuccessModal } from "@/components/features/verification-success-modal"
 import { ComingSoon } from "@/components/features/coming-soon"
 import { Skeleton } from "@/components/ui/skeleton"
 import { MapPin, Search, Mic } from "lucide-react"
@@ -19,6 +16,15 @@ import { toast } from "sonner"
 import { useTranslation } from "@/context/language-context"
 import { useSearchParams, useRouter as useNextRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
+
+// Dynamic imports - heavy components loaded only when needed (Google Maps, modals)
+const BinMap = dynamic(() => import("@/components/features/bin-map").then(mod => ({ default: mod.BinMap })), {
+    ssr: false,
+    loading: () => <div className="w-full h-full bg-secondary/30 animate-pulse rounded-2xl flex items-center justify-center"><MapPin className="w-8 h-8 text-muted-foreground/40" /></div>
+})
+const DropoffConfirmationModal = dynamic(() => import("@/components/features/dropoff-confirmation-modal").then(mod => ({ default: mod.DropoffConfirmationModal })), { ssr: false })
+const VerificationBanner = dynamic(() => import("@/components/features/verification-banner").then(mod => ({ default: mod.VerificationBanner })), { ssr: false })
+const VerificationSuccessModal = dynamic(() => import("@/components/features/verification-success-modal").then(mod => ({ default: mod.VerificationSuccessModal })), { ssr: false })
 
 // Fix for type mismatch between Mongoose Document and Client JSON
 type ClientBin = Omit<IBin, "_id"> & { _id: string }

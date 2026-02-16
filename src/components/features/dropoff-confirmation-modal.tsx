@@ -181,7 +181,7 @@ export function DropoffConfirmationModal({
     }
 
     return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 overflow-hidden">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-100 flex items-center justify-center p-4 overflow-hidden">
             <div className="bg-background rounded-3xl shadow-2xl w-full max-w-md max-h-[90vh] flex flex-col relative animate-in fade-in zoom-in-95 duration-200">
                 {/* Header */}
                 <div className="p-6 border-b border-border flex justify-between items-start">

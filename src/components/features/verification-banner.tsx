@@ -129,7 +129,7 @@ export function VerificationBanner({
                 initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 100 }}
-                className="fixed bottom-4 left-4 right-4 z-50 md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-96"
+                className="fixed bottom-9 left-4 right-4 z-50 md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-96"
             >
                 <Card className="shadow-lg border-2 bg-background/95 backdrop-blur-sm">
                     <CardContent className="p-4 space-y-4">
