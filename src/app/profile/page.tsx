@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { User, Settings, LogOut, Bell, Shield, Wallet, Share2 } from "lucide-react"
+import { User, Settings, LogOut, Bell, Shield, Wallet, Share2, X } from "lucide-react"
 import { useAuth } from "@/context/auth-context"
 import { useTranslation } from "@/context/language-context"
 
@@ -35,10 +35,13 @@ export default function ProfilePage() {
     const [activeModal, setActiveModal] = useState<string | null>(null)
 
     const Modal = ({ title, onClose, children }: { title: string, onClose: () => void, children: React.ReactNode }) => (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4 animate-in fade-in duration-200">
-            <Card className="w-full max-w-sm max-h-[90vh] overflow-y-auto relative">
-                <div className="bg-primary/10 p-3 sm:p-4 border-b sticky top-0">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4 animate-in fade-in duration-200" onClick={onClose}>
+            <Card className="w-full max-w-sm max-h-[90vh] overflow-y-auto relative" onClick={(e) => e.stopPropagation()}>
+                <div className="bg-primary/10 p-3 sm:p-4 border-b sticky top-0 flex items-center justify-between z-10">
                     <h3 className="font-bold text-base sm:text-lg">{title}</h3>
+                    <button onClick={onClose} className="p-1 rounded-full hover:bg-secondary transition-colors" aria-label="Close">
+                        <X className="w-5 h-5 text-muted-foreground" />
+                    </button>
                 </div>
                 <div className="p-3 sm:p-4">
                     {children}
