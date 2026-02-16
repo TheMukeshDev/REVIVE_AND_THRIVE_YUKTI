@@ -34,7 +34,7 @@ function FindBinPageContent() {
     const searchParams = useSearchParams()
     const nextRouter = useNextRouter()
     const router = useRouter()
-    const { user } = useAuth()
+    const { user, updateUser } = useAuth()
 
     // Check authentication
     useEffect(() => {
@@ -73,10 +73,43 @@ function FindBinPageContent() {
     const [isCitySupported, setIsCitySupported] = useState(true)
     const [isListening, setIsListening] = useState(false)
 
+    // Helper: save transaction to localStorage for home page
+    const saveLocalTransaction = useCallback((pointsEarned: number, co2Saved: number, binName: string) => {
+        if (typeof window === 'undefined') return
+        try {
+            const existing = JSON.parse(localStorage.getItem('eco_transactions') || '[]')
+            const tx = {
+                _id: `local_${Date.now()}`,
+                type: 'recycle',
+                itemType: sessionStorage.getItem('scanned_item_type') || 'e-waste',
+                pointsEarned,
+                status: 'approved',
+                createdAt: new Date().toISOString(),
+                binName,
+                co2Saved
+            }
+            existing.unshift(tx)
+            localStorage.setItem('eco_transactions', JSON.stringify(existing.slice(0, 50)))
+        } catch (e) {
+            console.error('Failed to save local transaction', e)
+        }
+    }, [])
+
     // Verification Hook
     const onVerificationSuccess = useCallback((data: { pointsEarned: number, co2Saved: number, binName: string }) => {
         setSuccessData(data)
         setShowSuccessModal(true)
+
+        // Persist earned points to auth context + localStorage
+        if (user) {
+            updateUser({
+                points: (user.points || 0) + data.pointsEarned,
+                totalItemsRecycled: (user.totalItemsRecycled || 0) + 1,
+                totalCO2Saved: (user.totalCO2Saved || 0) + data.co2Saved
+            })
+        }
+        saveLocalTransaction(data.pointsEarned, data.co2Saved, data.binName)
+
         // Clear flow
         if (typeof window !== 'undefined') {
             sessionStorage.removeItem("drop_flow_active")
@@ -84,7 +117,7 @@ function FindBinPageContent() {
             sessionStorage.removeItem("ai_confidence")
         }
         setIsDropFlow(false)
-    }, [])
+    }, [user, updateUser, saveLocalTransaction])
 
     const onVerificationError = useCallback((error: string) => {
         toast.error(error)
@@ -199,10 +232,22 @@ function FindBinPageContent() {
     }
 
     const handleDropConfirmationSuccess = (points: number) => {
+        const binName = dropoffBin?.name || "Bin"
+        const co2Saved = 2.5
         setShowSuccessModal(true)
-        setSuccessData({ pointsEarned: points, co2Saved: 2.5, binName: dropoffBin?.name || "Bin" })
+        setSuccessData({ pointsEarned: points, co2Saved, binName })
         setShowDropoffModal(false)
         setDropoffBin(null)
+
+        // Persist earned points to auth context + localStorage
+        if (user) {
+            updateUser({
+                points: (user.points || 0) + points,
+                totalItemsRecycled: (user.totalItemsRecycled || 0) + 1,
+                totalCO2Saved: (user.totalCO2Saved || 0) + co2Saved
+            })
+        }
+        saveLocalTransaction(points, co2Saved, binName)
     }
 
     const toggleListening = () => {

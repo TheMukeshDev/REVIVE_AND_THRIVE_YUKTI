@@ -42,10 +42,25 @@ export default function Home() {
       }
 
       try {
-        const txRes = await fetch(`/api/transactions?userId=${user._id}`)
-        const txData = await txRes.json()
+        // Read transactions from localStorage (primary source — no DB)
+        const localTx = JSON.parse(localStorage.getItem('eco_transactions') || '[]')
 
-        if (txData.success) setTransactions(txData.data)
+        // Also try API as fallback (returns [] when DB is offline)
+        try {
+          const txRes = await fetch(`/api/transactions?userId=${user._id}`)
+          const txData = await txRes.json()
+          if (txData.success && txData.data.length > 0) {
+            // Merge server + local, dedup by _id
+            const serverIds = new Set(txData.data.map((t: any) => t._id))
+            const merged = [...txData.data, ...localTx.filter((t: any) => !serverIds.has(t._id))]
+            setTransactions(merged)
+          } else {
+            setTransactions(localTx)
+          }
+        } catch {
+          // API failed, use local only
+          setTransactions(localTx)
+        }
 
       } catch (error) {
         console.error("Failed to fetch data", error)
@@ -68,13 +83,16 @@ export default function Home() {
     return acc
   }, 0)
 
-  // Calculate total points from all approved transactions
-  const totalPoints = transactions.reduce((acc, tx: any) => {
-    if (tx.status === 'approved') {
-      return acc + (tx.pointsEarned || 0)
-    }
-    return acc
-  }, 0)
+  // Calculate total points — use auth context as primary (always up-to-date), transactions as supplement
+  const totalPoints = Math.max(
+    user?.points || 0,
+    transactions.reduce((acc, tx: any) => {
+      if (tx.status === 'approved') {
+        return acc + (tx.pointsEarned || 0)
+      }
+      return acc
+    }, 0)
+  )
 
   return (
     <motion.div 

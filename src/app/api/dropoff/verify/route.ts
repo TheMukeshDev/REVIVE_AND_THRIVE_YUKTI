@@ -7,7 +7,7 @@ const MAX_TIMESTAMP_AGE_MINUTES = 15 // Reject timestamps older than 15 minutes
 
 // Static bin data for verification (no DB needed)
 const STATIC_BINS: Record<string, { _id: string; name: string; latitude: number; longitude: number; status: string }> = {
-    "bin-001": { _id: "bin-001", name: "B Block Bin", latitude: 25.5263407, longitude: 81.8482162, status: "operational" },
+    // "bin-001": { _id: "bin-001", name: "B Block Bin", latitude: 25.5263407, longitude: 81.8482162, status: "operational" },
     "bin-002": { _id: "bin-002", name: "Civil Lines E-Bin", latitude: 25.4534, longitude: 81.8340, status: "operational" },
     "bin-003": { _id: "bin-003", name: "Teliyarganj E-Bin", latitude: 25.4624, longitude: 81.8605, status: "operational" },
     "bin-004": { _id: "bin-004", name: "Radhe Motor E-Waste Bin", latitude: 25.5283335, longitude: 81.8478447, status: "operational" },
