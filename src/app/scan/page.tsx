@@ -93,6 +93,10 @@ export default function ScanPage() {
                     sessionStorage.setItem("scanned_item_type", data.result.type)
                     sessionStorage.setItem("scanned_category", data.result.category)
                     sessionStorage.setItem("ai_confidence", data.result.confidence.toString())
+                    
+                    if (data.transactionId) {
+                        sessionStorage.setItem("pending_transaction_id", data.transactionId)
+                    }
 
                     toast.success(`Identified: ${data.result.type} (${(data.result.confidence * 100).toFixed(0)}% confidence)`)
 

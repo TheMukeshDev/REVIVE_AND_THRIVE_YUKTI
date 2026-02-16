@@ -20,7 +20,7 @@ export async function POST(request: Request) {
         await dbConnect()
 
         const body = await request.json()
-        const { userId, binId, items, verificationMethod, userLocation, capturedAt } = body
+        const { userId, binId, items, verificationMethod, userLocation, capturedAt, transactionId } = body
 
         // Validation
         if (!userId || !binId || !items || !Array.isArray(items) || items.length === 0) {
@@ -128,12 +128,20 @@ export async function POST(request: Request) {
         let totalItems = 0
         let totalCO2 = 0
 
+        let itemIndex = 0
+
         for (const item of items) {
             const { itemName, itemType, value } = item
 
             if (!itemName || !itemType || typeof value !== 'number') {
                 continue // Skip invalid items
             }
+
+            // Generate unique transaction ID for each item
+            // If a client-side transactionId is provided (from scan), append index to make unique
+            const currentTxId = (transactionId && itemIndex === 0) 
+                ? transactionId 
+                : (transactionId ? `${transactionId}-${itemIndex}` : generateTransactionId())
 
             // Points calculation (value × 2)
             const pointsEarned = Math.round(value * 2)
@@ -144,7 +152,7 @@ export async function POST(request: Request) {
             const tx = await Transaction.create({
                 userId: user._id,
                 binId: bin._id,
-                transactionId: generateTransactionId(),
+                transactionId: currentTxId,
                 type: 'recycle',
                 itemName,
                 itemType,
@@ -162,6 +170,7 @@ export async function POST(request: Request) {
             totalPoints += pointsEarned
             totalItems += 1
             totalCO2 += co2Saved
+            itemIndex++
         }
 
         // Validate that at least one valid item was processed
@@ -190,7 +199,7 @@ export async function POST(request: Request) {
                 transactionIds: transactions.map(tx => tx.transactionId),
                 transactions
             },
-            message: `🎉 Drop-off verified! You earned ${totalPoints} points! Transaction IDs: ${transactions.map(tx => tx.transactionId).join(', ')}`
+            message: `🎉 Drop-off verified! You earned ${totalPoints} points! Transaction ID: ${transactions[0].transactionId}`
         })
 
     } catch (error) {

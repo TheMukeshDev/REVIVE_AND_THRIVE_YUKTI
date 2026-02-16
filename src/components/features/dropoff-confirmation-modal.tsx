@@ -143,6 +143,8 @@ export function DropoffConfirmationModal({
         setError("")
 
         try {
+            const pendingTxId = sessionStorage.getItem("pending_transaction_id")
+
             const response = await fetch("/api/dropoff/verify", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -155,7 +157,8 @@ export function DropoffConfirmationModal({
                         latitude: userLocation.latitude,
                         longitude: userLocation.longitude
                     },
-                    capturedAt: new Date().toISOString() // Include current timestamp for validation
+                    capturedAt: new Date().toISOString(), // Include current timestamp for validation
+                    transactionId: pendingTxId || undefined // Pass the pre-generated ID if available
                 })
             })
 
