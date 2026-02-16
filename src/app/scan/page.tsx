@@ -100,6 +100,9 @@ export default function ScanPage() {
 
                     toast.success(`Identified: ${data.result.type} (${(data.result.confidence * 100).toFixed(0)}% confidence)`)
 
+                    // Stop camera before redirecting
+                    stopCamera()
+
                     // Redirect to map with filter pre-selected
                     router.push(`/find-bin?dropFlow=true&filter=${data.result.category === 'e-waste' ? 'all' : 'all'}&item=${encodeURIComponent(data.result.type)}`)
                 } else {

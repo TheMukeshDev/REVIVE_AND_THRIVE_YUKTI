@@ -3,7 +3,6 @@
 import { useEffect, useState, useRef } from "react"
 import { useMap } from "@vis.gl/react-google-maps"
 import { DirectionsRenderer } from "@/components/features/directions-renderer" // Assuming this wrapper exists/updates
-// Use standard Google Maps API types globally available 
 
 interface RouteLayerProps {
     userLocation: { latitude: number; longitude: number }
@@ -48,7 +47,7 @@ export function RouteLayer({ userLocation, destination, onDirectionsFetched }: R
             origin: { lat: Number(userLocation.latitude), lng: Number(userLocation.longitude) },
             destination: { lat: Number(destination.lat), lng: Number(destination.lng) },
             travelMode: google.maps.TravelMode.DRIVING,
-        }, (result, status) => {
+        }, (result: google.maps.DirectionsResult | null, status: google.maps.DirectionsStatus) => {
             if (status === google.maps.DirectionsStatus.OK && result) {
                 setDirectionsResponse(result)
                 onDirectionsFetched?.(result)

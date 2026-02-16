@@ -266,11 +266,11 @@ export function VerificationBanner({
                                     exit={{ opacity: 0 }}
                                 >
                                     {/* Show Address instead of Disabled Button */}
-                                    <div className="p-3 bg-secondary/20 rounded-lg text-center">
+                                    <div className="p-3 bg-secondary/20 rounded-lg text-center -mt-1">
                                         <p className="text-xs font-semibold text-muted-foreground mb-1">GO TO:</p>
                                         <p className="text-sm font-medium">{destination.address || destination.binName}</p>
                                     </div>
-                                    <p className="text-xs text-blue-600 text-center mt-2 animate-pulse">
+                                    <p className="text-xs text-blue-600 text-center mt-1.5 animate-pulse">
                                         Get within 50 meters to begin verification
                                     </p>
                                 </motion.div>
