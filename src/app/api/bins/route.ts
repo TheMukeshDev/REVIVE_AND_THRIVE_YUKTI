@@ -5,20 +5,20 @@ export const dynamic = 'force-dynamic'
 
 // Static bin data — no database needed
 const STATIC_BINS = [
-    // {
-    //     _id: "bin-001",
-    //     name: "B Block Bin",
-    //     address: "B Block, Near Main Gate, Prayagraj",
-    //     city: "Prayagraj",
-    //     latitude: 25.5268525,
-    //     longitude: 81.8481018,
-    //     qrCode: "BIN-PRJ-001",
-    //     acceptedItems: ["all", "smartphone", "laptop", "battery", "e-waste"],
-    //     fillLevel: 30,
-    //     status: "operational",
-    //     createdAt: new Date().toISOString(),
-    //     updatedAt: new Date().toISOString()
-    // },
+    {
+        _id: "bin-001",
+        name: "B Block Bin",
+        address: "B Block, Near Main Gate, Prayagraj",
+        city: "Prayagraj",
+        latitude: 25.5263407,
+        longitude: 81.8482162,
+        qrCode: "BIN-PRJ-001",
+        acceptedItems: ["all", "smartphone", "laptop", "battery", "e-waste"],
+        fillLevel: 30,
+        status: "operational",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+    },
     {
         _id: "bin-002",
         name: "Civil Lines E-Bin",

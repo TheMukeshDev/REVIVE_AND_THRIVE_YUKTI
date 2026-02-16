@@ -2,18 +2,18 @@ import { NextResponse } from "next/server"
 
 // Import the same static bins used in the main bins route
 const STATIC_BINS = [
-    // {
-    //     _id: "bin-001",
-    //     name: "B Block Bin",
-    //     address: "B Block, Near Main Gate, Prayagraj",
-    //     city: "Prayagraj",
-    //     latitude: 25.5263407,
-    //     longitude: 81.8482162,
-    //     qrCode: "BIN-PRJ-001",
-    //     acceptedItems: ["all", "smartphone", "laptop", "battery", "e-waste"],
-    //     fillLevel: 30,
-    //     status: "operational"
-    // },
+    {
+        _id: "bin-001",
+        name: "B Block Bin",
+        address: "B Block, Near Main Gate, Prayagraj",
+        city: "Prayagraj",
+        latitude: 25.5263407,
+        longitude: 81.8482162,
+        qrCode: "BIN-PRJ-001",
+        acceptedItems: ["all", "smartphone", "laptop", "battery", "e-waste"],
+        fillLevel: 30,
+        status: "operational"
+    },
     {
         _id: "bin-002",
         name: "Civil Lines E-Bin",
