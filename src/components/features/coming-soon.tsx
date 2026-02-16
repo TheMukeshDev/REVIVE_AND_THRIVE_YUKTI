@@ -46,8 +46,8 @@ export function ComingSoon({ city, onNotifyMe }: ComingSoonProps) {
                 className="mb-6"
             >
                 <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-blue-500/20 rounded-full blur-2xl"></div>
-                    <div className="relative bg-gradient-to-br from-green-50 to-blue-50 p-8 rounded-full border-2 border-dashed border-green-300">
+                    <div className="absolute inset-0 bg-linear-to-r from-green-400/20 to-blue-500/20 rounded-full blur-2xl"></div>
+                    <div className="relative bg-linear-to-br from-green-50 to-blue-50 p-8 rounded-full border-2 border-dashed border-green-300">
                         <MapPin className="w-16 h-16 text-green-600" />
                     </div>
                 </div>
