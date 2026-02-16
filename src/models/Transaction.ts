@@ -3,6 +3,7 @@ import mongoose, { Schema, Document, Model } from "mongoose"
 export interface ITransaction extends Document {
     userId: mongoose.Types.ObjectId
     binId?: mongoose.Types.ObjectId
+    transactionId: string // Unique transaction identifier
     type: "scan" | "recycle" | "sell"
     itemName: string
     itemType: string
@@ -13,6 +14,7 @@ export interface ITransaction extends Document {
     status: 'pending' | 'approved' | 'rejected'
     verifiedAt?: Date
     verificationLocation?: { latitude: number; longitude: number }
+    capturedAt?: Date // Timestamp when item was captured
     createdAt: Date
     updatedAt: Date
 }
@@ -21,6 +23,7 @@ const TransactionSchema: Schema = new Schema(
     {
         userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
         binId: { type: Schema.Types.ObjectId, ref: "Bin", required: false }, // Optional for scans
+        transactionId: { type: String, required: true, unique: true, index: true }, // Unique transaction identifier
         type: { type: String, enum: ["scan", "recycle", "sell"], default: "recycle" },
         itemName: { type: String, required: true },
         itemType: { type: String, required: true }, // category e.g. "e-waste"
@@ -33,7 +36,8 @@ const TransactionSchema: Schema = new Schema(
         verificationLocation: {
             latitude: Number,
             longitude: Number
-        }
+        },
+        capturedAt: { type: Date, required: false } // When item was captured/verified
     },
     {
         timestamps: true,

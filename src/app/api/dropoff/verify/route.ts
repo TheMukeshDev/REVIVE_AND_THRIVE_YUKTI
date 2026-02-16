@@ -4,16 +4,23 @@ import Bin from "@/models/Bin"
 import Transaction from "@/models/Transaction"
 import User from "@/models/User"
 import { isWithinRadius } from "@/lib/geo"
+import crypto from "crypto"
 
 const PROXIMITY_RADIUS_METERS = 100 // User must be within 100m of bin
 const MAX_DROPOFFS_PER_DAY = 5
+const MAX_TIMESTAMP_AGE_MINUTES = 15 // Reject timestamps older than 15 minutes
+
+// Generate unique transaction ID
+function generateTransactionId(): string {
+    return `TXN-${Date.now()}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`
+}
 
 export async function POST(request: Request) {
     try {
         await dbConnect()
 
         const body = await request.json()
-        const { userId, binId, items, verificationMethod, userLocation } = body
+        const { userId, binId, items, verificationMethod, userLocation, capturedAt } = body
 
         // Validation
         if (!userId || !binId || !items || !Array.isArray(items) || items.length === 0) {
@@ -28,6 +35,28 @@ export async function POST(request: Request) {
                 success: false,
                 error: "Valid userLocation (latitude, longitude) is required"
             }, { status: 400 })
+        }
+
+        // Timestamp validation - reject old timestamps
+        if (capturedAt) {
+            const capturedTime = new Date(capturedAt)
+            const currentTime = new Date()
+            const ageInMinutes = (currentTime.getTime() - capturedTime.getTime()) / (1000 * 60)
+
+            if (ageInMinutes > MAX_TIMESTAMP_AGE_MINUTES) {
+                return NextResponse.json({
+                    success: false,
+                    error: `Timestamp is too old (${Math.floor(ageInMinutes)} minutes). Please capture items within ${MAX_TIMESTAMP_AGE_MINUTES} minutes of drop-off.`
+                }, { status: 400 })
+            }
+
+            // Reject future timestamps
+            if (capturedTime > currentTime) {
+                return NextResponse.json({
+                    success: false,
+                    error: "Invalid timestamp: Future dates are not allowed"
+                }, { status: 400 })
+            }
         }
 
         // 1. Check if user exists
@@ -115,6 +144,7 @@ export async function POST(request: Request) {
             const tx = await Transaction.create({
                 userId: user._id,
                 binId: bin._id,
+                transactionId: generateTransactionId(),
                 type: 'recycle',
                 itemName,
                 itemType,
@@ -124,6 +154,7 @@ export async function POST(request: Request) {
                 verificationMethod: verificationMethod || 'self_report',
                 status: 'approved',
                 verifiedAt: new Date(),
+                capturedAt: capturedAt ? new Date(capturedAt) : new Date(),
                 verificationLocation: userLocation
             })
 
@@ -156,9 +187,10 @@ export async function POST(request: Request) {
                 pointsEarned: totalPoints,
                 itemsRecycled: totalItems,
                 co2Saved: totalCO2,
+                transactionIds: transactions.map(tx => tx.transactionId),
                 transactions
             },
-            message: `🎉 Drop-off verified! You earned ${totalPoints} points!`
+            message: `🎉 Drop-off verified! You earned ${totalPoints} points! Transaction IDs: ${transactions.map(tx => tx.transactionId).join(', ')}`
         })
 
     } catch (error) {

@@ -64,7 +64,7 @@ export function DropoffConfirmationModal({
     useEffect(() => {
         return () => {
             if (stream) {
-                stream.getTracks().forEach(t => t.stop())
+                stream.getTracks().forEach((t: MediaStreamTrack) => t.stop())
             }
         }
     }, [stream])
@@ -97,7 +97,7 @@ export function DropoffConfirmationModal({
             completeDropoff()
 
             // Cleanup
-            if (stream) stream.getTracks().forEach(t => t.stop())
+            if (stream) stream.getTracks().forEach((t: MediaStreamTrack) => t.stop())
             sessionStorage.removeItem("pending_drop_image")
             sessionStorage.removeItem("drop_flow_active")
         }, 2000)
@@ -106,17 +106,17 @@ export function DropoffConfirmationModal({
     if (!isOpen) return null
 
     const toggleItem = (item: typeof ITEM_TEMPLATES[0]) => {
-        setSelectedItems(prev => {
-            const exists = prev.find(i => i.itemName === item.itemName)
+        setSelectedItems((prev) => {
+            const exists = prev.find((i) => i.itemName === item.itemName)
             if (exists) {
-                return prev.filter(i => i.itemName !== item.itemName)
+                return prev.filter((i) => i.itemName !== item.itemName)
             }
             return [...prev, item]
         })
     }
 
     // Calculate total points
-    const totalPoints = selectedItems.reduce((sum, item) => sum + (item.value * 2), 0)
+    const totalPoints = selectedItems.reduce((sum: number, item) => sum + (item.value * 2), 0)
 
     const handleNext = () => {
         if (selectedItems.length === 0) {
@@ -154,7 +154,8 @@ export function DropoffConfirmationModal({
                     userLocation: {
                         latitude: userLocation.latitude,
                         longitude: userLocation.longitude
-                    }
+                    },
+                    capturedAt: new Date().toISOString() // Include current timestamp for validation
                 })
             })
 
@@ -200,7 +201,7 @@ export function DropoffConfirmationModal({
                         <div className="space-y-3">
                             <h3 className="text-sm font-semibold text-muted-foreground mb-3">{t("select_items_instruction")}</h3>
                             {ITEM_TEMPLATES.map((item) => {
-                                const isSelected = selectedItems.some(i => i.itemName === item.itemName)
+                                const isSelected = selectedItems.some((i) => i.itemName === item.itemName)
                                 const isAccepted = acceptedItems.length === 0 || acceptedItems.some(ai =>
                                     ai.toLowerCase().includes(item.itemType.toLowerCase()) ||
                                     item.itemType.toLowerCase().includes(ai.toLowerCase())
@@ -233,7 +234,7 @@ export function DropoffConfirmationModal({
 
                     {step === "RESCAN" && (
                         <div className="flex flex-col items-center gap-4">
-                            <div className="w-full aspect-[3/4] bg-black rounded-2xl overflow-hidden relative shadow-inner">
+                            <div className="w-full aspect-3/4 bg-black rounded-2xl overflow-hidden relative shadow-inner">
                                 {permissionDenied ? (
                                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-900 text-white p-6 text-center z-10">
                                         <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mb-4">
@@ -298,14 +299,14 @@ export function DropoffConfirmationModal({
                 </div>
 
                 {/* Footer */}
-                <div className="p-6 border-t border-border bg-secondary/20">
+                <div className="shrink-0 p-6 border-t border-border bg-secondary/20">
                     {error && (
                         <div className="mb-3 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 text-sm">
                             {error}
                         </div>
                     )}
 
-                    {step === "SELECT" ? (
+                    {step === "SELECT" && (
                         <>
                             <div className="flex items-center justify-between mb-4">
                                 <span className="text-sm text-muted-foreground">{t("total_points")}:</span>
@@ -313,21 +314,33 @@ export function DropoffConfirmationModal({
                             </div>
                             <button
                                 onClick={handleNext}
-                                disabled={selectedItems.length === 0}
-                                className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50"
+                                disabled={selectedItems.length === 0 || isSubmitting}
+                                className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                {initialImage ? "Continue to Verification" : t("confirm_drop")}
+                                {isSubmitting ? "Processing..." : (initialImage ? "Continue to Verification" : t("confirm_drop"))}
                             </button>
                         </>
-                    ) : step === "RESCAN" ? (
+                    )}
+
+                    {step === "RESCAN" && (
                         <button
                             onClick={captureAndVerify}
-                            className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-xl hover:bg-primary/90 transition-colors"
+                            disabled={isSubmitting}
+                            className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <Camera className="inline w-5 h-5 mr-2" />
-                            Verify & Drop
+                            {isSubmitting ? "Verifying..." : "Verify & Drop"}
                         </button>
-                    ) : null}
+                    )}
+
+                    {step === "VERIFYING" && (
+                        <button
+                            disabled
+                            className="w-full bg-primary/50 text-primary-foreground font-bold py-3 rounded-xl opacity-50 cursor-not-allowed"
+                        >
+                            Verifying...
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
